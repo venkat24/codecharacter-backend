@@ -7,6 +7,8 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Bus\SelfHandling;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use App\Models\JobsStatus;
+use App\Http\Controllers\SimulatorCall;
 
 class simulation extends Job implements SelfHandling, ShouldQueue
 {
@@ -14,21 +16,25 @@ class simulation extends Job implements SelfHandling, ShouldQueue
 
     protected $job_id;
 
-    public function __construct()
+    public function __construct($job_id)
     {
-    //    $this->job_id = $job_id;
+        $this->job_id = $job_id;
     }
 
     
     public function handle()
     {
+        
+        $job = JobsStatus::findorFail($this->job_id);
+        $job->status = "Processing";
+        $job->save();
         //run the simulation here
-      //  console.log("hi there");
-        \Log::info("something");
     }
 
     public function fail()
     {
-      //to update the submissions table to timeout
+      $job = JobsStatus::findorFail($this->job_id);
+        $job->status = "Failed";
+        $job->save();
     }
 }
