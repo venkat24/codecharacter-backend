@@ -20,9 +20,9 @@ class CreateForeignkeysTable extends Migration
         Schema::table('submissions',function(Blueprint $table){
             $table->foreign('teamId')->references('id')->on('teams');
         });
-        Schema::table('registrations',function(Blueprint $table){
-            $table->foreign('teamId')->references('id')->on('teams');
-        });
+        //Schema::table('registrations',function(Blueprint $table){
+            //$table->foreign('teamId')->references('id')->on('teams');
+        //});
         Schema::table('teams',function(Blueprint $table){
             $table->foreign('leaderRegistrationId')->references('id')->on('registrations');
         });
