@@ -4,8 +4,11 @@
         <title>Laravel</title>
 
         <link href="https://fonts.googleapis.com/css?family=Lato:100" rel="stylesheet" type="text/css">
-
         <style>
+            @font-face {
+                font-family: Forward;
+                src: url('fonts/fff_forward.ttf');
+            }
             html, body {
                 height: 100%;
             }
@@ -15,8 +18,7 @@
                 padding: 0;
                 width: 100%;
                 display: table;
-                font-weight: 100;
-                font-family: 'Lato';
+                font-family: 'Forward';
             }
 
             .container {
@@ -38,7 +40,7 @@
     <body>
         <div class="container">
             <div class="content">
-                <div class="title">Laravel 5</div>
+                <div class="title">Code Character</div>
             </div>
         </div>
     </body>
