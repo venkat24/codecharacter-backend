@@ -17,7 +17,7 @@ Route::get('/', function () {
 
 // API routes 
 Route::post('/api/register_user','Registrations@newRegistration');
-//Route::group(['middleware' => 'checkSession'], function() {
-    Route::post('/api/login','Auth@login');
+Route::post('/api/login','Auth@login');
+Route::group(['middleware' => 'checkSession'], function() {
     Route::post('/api/logout','Auth@logout');
-//});
+});
