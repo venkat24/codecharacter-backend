@@ -16,6 +16,7 @@ Route::get('/', function () {
 });
 
 // API routes 
+Route::get('/api/check_job_status', 'SimulatorCall@checkJobStatus');
 Route::post('/api/register_user','Registrations@newRegistration');
 Route::post('/api/login','Auth@login');
 Route::group(['middleware' => 'checkSession'], function() {
