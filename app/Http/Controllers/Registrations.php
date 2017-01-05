@@ -30,20 +30,25 @@ class Registrations extends Controller
         try {
             $validator = Validator::make($request->all(), [
                 'pragyanId' => 'required|integer',
+                'password'  => 'required',
                 'name'      => 'required',
                 'emailId'   => 'required',
                 'phoneNo'   => 'required|integer|digits:10',
             ]);
+
             if($validator->fails()) {
                 $message = $validator->errors()->all();
                 return JSONResponse::response(400, $message);
             }
-
+            
+            $salt = getenv('PASSWORD_SECRET');
+            $password = sha1($request->input('password').$salt); 
             $response = Registration::insert([
                                         'pragyanId' => $request->input('pragyanId'),
                                         'name'      => $request->input('name'),
                                         'emailId'   => $request->input('emailId'),
                                         'phoneNo'   => $request->input('phoneNo'),
+                                        'password'  => $password,
                                       ]);
             return JSONResponse::response(200,"Registration complete");
         } catch (Exception $e) {
