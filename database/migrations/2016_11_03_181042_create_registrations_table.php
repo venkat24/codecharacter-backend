@@ -16,7 +16,8 @@ class CreateRegistrationsTable extends Migration
             $table->increments('id')->unsigned();
             $table->integer('teamId')->unsigned();
             $table->integer('pragyanId')->unique();
-            $table->string('name',100);
+            $table->string('name',255);
+            $table->string('password',255);
             $table->string('emailId')->unique();
             $table->integer('phoneNo')->unsigned();
             $table->timestamps();
