@@ -17,7 +17,7 @@ class CreateSubmissionsTable extends Migration
             $table->integer('teamId')->unsigned();
             $table->dateTime('completedOn');
             $table->integer('levelNo');
-            $table->string('status',100);
+            $table->enum('status', ['RUNNING', 'WAITING', 'COMPLETED','FAILED'])->default('WAITING');
             $table->string('sourceCodePath',100);
             $table->timestamps();
         });
