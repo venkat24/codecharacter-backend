@@ -17,7 +17,7 @@ class Registrations extends Controller
 {
     /**
      * Add a new participant to Code Character
-     * Takes all the registration parameters and inserts into the 
+     * Takes all the registration parameters and inserts into the
      * registrations database without a foreign key check to teams
      *
      * @param pragyanId
@@ -46,7 +46,7 @@ class Registrations extends Controller
             }
 
             $salt = getenv('PASSWORD_SECRET');
-            $password = sha1($request->input('password').$salt); 
+            $password = sha1($request->input('password').$salt);
             $registrationId = Registration::insertGetId([
                                         'pragyanId' => $request->input('pragyanId'),
                                         'emailId'   => $request->input('emailId'),
@@ -76,6 +76,32 @@ class Registrations extends Controller
             Log::error($e->getMessage()." ".$e->getLine());
             return JSONResponse::response(500, $e->getMessage());
         }
+    }
+
+    /**
+     * Function to check if a team name is already taken.
+     * This should be called in from text field as AJAX for both new team
+     * creation and existing team joining
+     *
+     * Returns "EXISTS" or "DOES NOT EXIST"
+     *
+     * @param teamName
+     * @return \Illuminate\Http\Response
+     */
+    public function checkIfTeamExists(Request $request) {
+        $validator = Validator::make($request->all(), [
+            'teamName'  => 'required',
+        ]);
+        if($validator->fails()) {
+            $message = $validator->errors()->all();
+            return JSONResponse::response(400, $message);
+        }
+        $response = Team::where('teamName','=',$request->input('teamName'))
+                        ->get();
+        if($response->isEmpty()) {
+            return JSONResponse::response(200, "DOES NOT EXIST");
+        }
+        return JSONResponse::response(200, "EXISTS");
     }
 }
 

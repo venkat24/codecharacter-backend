@@ -62,7 +62,6 @@ class SimulatorCall extends Controller
         } else {
             $status_code = 200;
             $message = "";
-            $job_status = $job_status;
             if ($job_status == "ACCEPTED" || $job_status == "REJECTED") {
                 $status_code = 200;
                 $message = $job_status;
