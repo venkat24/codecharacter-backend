@@ -21,4 +21,5 @@ Route::post('/api/register_user','Registrations@newRegistration');
 Route::post('/api/login','Auth@login');
 Route::group(['middleware' => 'checkSession'], function() {
     Route::post('/api/logout','Auth@logout');
+    Route::post('/api/submit_code', 'SimulatorCall@submitCode');
 });
