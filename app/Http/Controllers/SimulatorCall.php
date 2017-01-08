@@ -96,7 +96,7 @@ class SimulatorCall extends Controller
         $team_id = $request->input('teamId');
         if($request->file('file')->isValid())
         {
-            $filename = substr(md5(rand()), 0, 20)."_".$team_name;
+            $filename = substr(md5(rand()), 0, 8)."_".$team_name;
             str_replace(" ", "_", $filename);
             $file = $request->file('file');
             $file->move(storage_path('submissions'), $filename);
