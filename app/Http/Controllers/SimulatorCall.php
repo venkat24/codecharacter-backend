@@ -84,6 +84,7 @@ class SimulatorCall extends Controller
     public function submitCode(Request $request)
     {
         $validator = Validator::make($request->all(),[
+            'teamId' => 'required|integer',
             'teamName' => 'required|string',
             'file' => 'mimes:zip'
         ]);
@@ -92,9 +93,11 @@ class SimulatorCall extends Controller
             return JSONResponse::response(400,'Invalid parameters');
         }
         $team_name = $request->input('teamName');
+        $team_id = $request->input('teamId');
         if($request->file('file')->isValid())
         {
             $filename = substr(md5(rand()), 0, 20)."_".$team_name;
+            str_replace(" ", "_", $filename);
             $file = $request->file('file');
             $file->move(storage_path('submissions'), $filename);
         }
@@ -102,13 +105,20 @@ class SimulatorCall extends Controller
         {
             return JSONResponse::response(422,'Invalid file');
         }
-        $team = Team::where('teamName','=',$team_name)
-                               ->get()->first();
-        $submission = Submissions::insert([
-                'teamId' => $team->id,
-                'sourceCodePath' => storage_path('submissions').$filename
+        $team = Team::where('teamId','=',$team_id)
+                               ->get();
+        if($team->isEmpty())
+        {
+            return JSONResponse::response(400,'Invalid team id');
+        }
+        else
+        {
+            $submission = Submissions::insert([
+                    'teamId' => $team_id,
+                    'levelNo'  => 0,
+                    'sourceCodePath' => storage_path('submissions').$filename
             ]);
-        return JSONResponse::response(200, 'Upload successful');
+            return JSONResponse::response(200, 'Upload successful');
+        }
     }
 }
-
