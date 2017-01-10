@@ -20,10 +20,10 @@ class SetResponseHeaders
          * on all requests. Change this into a route middleware for only
          * the JSON APIs later. This is purely for testing.            
          */
-        //if($request->isMethod('post'))  {          
+        if($request->isMethod('post'))  {          
             $response = $next($request);
             return $response->header('Content-Type', 'application/json');
-        //}
+        }
         return $next($request);
     }
 }
