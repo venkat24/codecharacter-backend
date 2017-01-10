@@ -14,6 +14,9 @@
 Route::get('/', function () {
     return view('home');
 });
+Route::get('/teams', function () {
+    return view('teams');
+});
 
 // API routes 
 Route::get('/api/check_job_status', 'SimulatorCall@checkJobStatus');
