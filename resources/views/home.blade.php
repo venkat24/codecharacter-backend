@@ -2,7 +2,6 @@
 
 @section('main')
 
-
   <!-- First Band (Image) -->
     
   <div class="row">

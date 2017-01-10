@@ -9,6 +9,7 @@
 
   <link rel="stylesheet" href="stylesheets/foundation.min.css">
   <link rel="stylesheet" href="stylesheets/app.css">
+  <link rel="stylesheet" href="stylesheets/home.css">
 
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.1/jquery.min.js"></script>
   <script src="javascripts/modernizr.foundation.js"></script>
@@ -24,10 +25,10 @@
     </div>
     <div class="nine columns">
       <ul class="nav-bar right">
-        <li><a href="#">Link 1</a></li>
-        <li><a href="#">Link 2</a></li>
-        <li><a href="#">Link 3</a></li>
-        <li><a href="#">Link 4</a></li>
+        <li><a href="#">Teams</a></li>
+        <li><a href="#">Rules</a></li>
+        <li><a href="#">Documentation</a></li>
+        <li id="login-button"><a href="#">Login</a></li>
       </ul>
     </div>
   </div>
