@@ -1,18 +1,8 @@
 @extends('base')
 
 @section('links')
-  <meta charset="utf-8" />
-
-  <meta name="viewport" content="width=device-width" />
-
   <title>Welcome to Foundation | Banded</title>
-
-  <link rel="stylesheet" href="stylesheets/foundation.min.css">
-  <link rel="stylesheet" href="stylesheets/app.css">
-  <link rel="stylesheet" href="stylesheets/home.css">
-
-  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.1/jquery.min.js"></script>
-  <script src="javascripts/modernizr.foundation.js"></script>
+  <link rel="stylesheet" href="{{asset('stylesheets/home.css')}}">
 @endsection
 
 @section('main')

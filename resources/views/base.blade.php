@@ -2,6 +2,16 @@
 
 <head>
     @yield('links')
+    <meta charset="utf-8" />
+
+    <meta name="viewport" content="width=device-width" />
+
+    <link rel="stylesheet" href="{{asset('stylesheets/foundation.min.css')}}">
+    <link rel="stylesheet" href="{{asset('stylesheets/app.css')}}">
+    <link rel="stylesheet" href="{{asset('stylesheets/base.css')}}">
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.1/jquery.min.js"></script>
+    <script src="javascripts/modernizr.foundation.js"></script>
 </head>
 <body>
   
@@ -13,10 +23,10 @@
     </div>
     <div class="nine columns">
       <ul class="nav-bar right">
-        <li><a href="#">Teams</a></li>
+        <li><a href="/teams">Teams</a></li>
         <li><a href="#">Rules</a></li>
         <li><a href="#">Documentation</a></li>
-        <li><a href="#" id="login-button">Login</a></li>
+        <li><a href="#">Login</a></li>
       </ul>
     </div>
   </div>
