@@ -12,7 +12,7 @@
 */
 // Frontend routes
 Route::get('/', function () {
-    return view('welcome');
+    return view('home');
 });
 
 // API routes 
