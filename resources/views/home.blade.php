@@ -1,5 +1,20 @@
 @extends('base')
 
+@section('links')
+  <meta charset="utf-8" />
+
+  <meta name="viewport" content="width=device-width" />
+
+  <title>Welcome to Foundation | Banded</title>
+
+  <link rel="stylesheet" href="stylesheets/foundation.min.css">
+  <link rel="stylesheet" href="stylesheets/app.css">
+  <link rel="stylesheet" href="stylesheets/home.css">
+
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.1/jquery.min.js"></script>
+  <script src="javascripts/modernizr.foundation.js"></script>
+@endsection
+
 @section('main')
 
   <!-- First Band (Image) -->
@@ -53,27 +68,5 @@
       <img src="http://placehold.it/400x300&text=[img]" />
     </div>
   </div>
-  
-  
-  <!-- Footer -->
-  
-  <footer class="row">
-    <div class="twelve columns">
-      <hr />
-      <div class="row">
-        <div class="six columns">
-          <p>&copy; Copyright no one at all. Go to town.</p>
-        </div>
-        <div class="six columns">
-          <ul class="link-list right">
-            <li><a href="#">Link 1</a></li>
-            <li><a href="#">Link 2</a></li>
-            <li><a href="#">Link 3</a></li>
-            <li><a href="#">Link 4</a></li>
-          </ul>
-        </div>
-      </div>
-    </div> 
-  </footer>
 
 @endsection

@@ -1,19 +1,7 @@
 <!DOCTYPE html>
 
 <head>
-  <meta charset="utf-8" />
-
-  <meta name="viewport" content="width=device-width" />
-
-  <title>Welcome to Foundation | Banded</title>
-
-  <link rel="stylesheet" href="stylesheets/foundation.min.css">
-  <link rel="stylesheet" href="stylesheets/app.css">
-  <link rel="stylesheet" href="stylesheets/home.css">
-
-  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.1/jquery.min.js"></script>
-  <script src="javascripts/modernizr.foundation.js"></script>
-
+    @yield('links')
 </head>
 <body>
   
@@ -28,13 +16,33 @@
         <li><a href="#">Teams</a></li>
         <li><a href="#">Rules</a></li>
         <li><a href="#">Documentation</a></li>
-        <li id="login-button"><a href="#">Login</a></li>
+        <li><a href="#" id="login-button">Login</a></li>
       </ul>
     </div>
   </div>
 
   @yield('main')
   
+  <!-- Footer -->
+  
+  <footer class="row">
+    <div class="twelve columns">
+      <hr />
+      <div class="row">
+        <div class="six columns">
+          <p>&copy; Copyright no one at all. Go to town.</p>
+        </div>
+        <div class="six columns">
+          <ul class="link-list right">
+            <li><a href="#">Link 1</a></li>
+            <li><a href="#">Link 2</a></li>
+            <li><a href="#">Link 3</a></li>
+            <li><a href="#">Link 4</a></li>
+          </ul>
+        </div>
+      </div>
+    </div> 
+  </footer>
   <!-- Included JS Files (Compressed) -->
   <script src="javascripts/foundation.min.js"></script>
   
