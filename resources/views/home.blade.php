@@ -19,7 +19,7 @@
   
   <div class="row">
     <div class="twelve columns">
-      <h2 class="text-center">Code Character</h2>
+      <h2 class="text-center" id="main-heading">@{{title}}</h2>
       <hr />
     </div>
   </div>
@@ -43,9 +43,9 @@
   </div>
   
   
+  <div class="row">
   <!-- Third Band (Image Right with Text) -->
   
-  <div class="row">
     <div class="eight columns">
       <h4>This is a content section.</h4>
       
@@ -59,4 +59,5 @@
     </div>
   </div>
 
+  <script src="{{asset('javascripts/home.js')}}"></script>
 @endsection

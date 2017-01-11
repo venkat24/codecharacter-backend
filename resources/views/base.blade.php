@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 
 <head>
-    @yield('links')
     <meta charset="utf-8" />
 
     <meta name="viewport" content="width=device-width" />
@@ -11,7 +10,10 @@
     <link rel="stylesheet" href="{{asset('stylesheets/base.css')}}">
 
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.1/jquery.min.js"></script>
-    <script src="javascripts/modernizr.foundation.js"></script>
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.6/handlebars.min.js"></script>
+    <script src="{{asset('javascripts/modernizr.foundation.js')}}"></script>
+    @yield('links')
 </head>
 <body>
   
@@ -24,9 +26,9 @@
     <div class="nine columns">
       <ul class="nav-bar right">
         <li><a href="/teams">Teams</a></li>
-        <li><a href="#">Rules</a></li>
-        <li><a href="#">Documentation</a></li>
-        <li><a href="#">Login</a></li>
+        <li><a href="/rules">Rules</a></li>
+        <li><a href="/docs">Documentation</a></li>
+        <li><a href="/login">Login</a></li>
       </ul>
     </div>
   </div>
@@ -40,7 +42,7 @@
       <hr />
       <div class="row">
         <div class="six columns">
-          <p>&copy; Copyright no one at all. Go to town.</p>
+          <p>&copy; Copyright Pragyan 2017. Made with love by ♥ Delta Force</p>
         </div>
         <div class="six columns">
           <ul class="link-list right">
@@ -54,10 +56,10 @@
     </div> 
   </footer>
   <!-- Included JS Files (Compressed) -->
-  <script src="javascripts/foundation.min.js"></script>
+  <script src="{{asset('javascripts/foundation.min.js')}}"></script>
   
   <!-- Initialize JS Plugins -->
-  <script src="javascripts/app.js"></script>
+  <script src="{{asset('javascripts/app.js"')}}"></script>
 </body>
 </html>
 
