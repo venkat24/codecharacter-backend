@@ -17,6 +17,12 @@ Route::get('/', function () {
 Route::get('/teams', function () {
     return view('teams');
 });
+Route::get('/login', function () {
+    return view('login');
+});
+Route::get('/docs', function () {
+    return view('docs');
+});
 
 // API routes 
 Route::get('/api/check_job_status', 'SimulatorCall@checkJobStatus');

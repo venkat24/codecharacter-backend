@@ -15,6 +15,7 @@
     <script src="{{asset('javascripts/modernizr.foundation.js')}}"></script>
     @yield('links')
 </head>
+@yield('pre-main')
 <body>
   
   <!-- Header and Nav -->
@@ -42,7 +43,7 @@
       <hr />
       <div class="row">
         <div class="six columns">
-          <p>&copy; Copyright Pragyan 2017. Made with love by ♥ Delta Force</p>
+          <p>&copy; Copyright Pragyan 2017. Made with ♥ by Delta Force</p>
         </div>
         <div class="six columns">
           <ul class="link-list right">
