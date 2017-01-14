@@ -16,7 +16,7 @@ class CreateInvitesTable extends Migration
             $table->increments('id');
             $table->integer('fromTeamId')->unsigned();
             $table->integer('toRegistrationId')->unsigned();
-            $table->string('status',100)->default('sent');
+            $table->enum('status', ['SENT','ACCEPTED'])->default('ACCEPTED');
             $table->timestamps();
         });
     }
