@@ -15,7 +15,7 @@ class CreateForeignkeysTable extends Migration
 
 
         Schema::table('notifications',function(Blueprint $table){
-            $table->foreign('teamId')->references('id')->on('teams');
+            $table->foreign('userId')->references('id')->on('registrations');
         });
         Schema::table('submissions',function(Blueprint $table){
             $table->foreign('teamId')->references('id')->on('teams');
