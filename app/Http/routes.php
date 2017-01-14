@@ -24,12 +24,16 @@ Route::get('/docs', function () {
     return view('docs');
 });
 
-// API routes 
-Route::get('/api/check_job_status', 'SimulatorCall@checkJobStatus');
-Route::get('/api/check_if_team_exists', 'Registrations@checkIfTeamExists');
-Route::post('/api/register_user','Registrations@newRegistration');
-Route::post('/api/login','Auth@login');
-Route::group(['middleware' => 'checkSession'], function() {
+// API routes
+Route::group(['middleware' => 'setResponseHeaders'], function() {
+    Route::post('api/send_invite','Registrations@sendInvite'); 
+    Route::post('api/confirm','Registrations@confirmInvite'); 
+    Route::get('/api/check_job_status', 'SimulatorCall@checkJobStatus');
+    Route::get('/api/check_if_team_exists', 'Registrations@checkIfTeamExists');
+    Route::post('/api/register_user','Registrations@newRegistration');
+    Route::post('/api/login','Auth@login');
+});
+Route::group(['middleware' => ['checkSession','setResponseHeaders']], function() {
     Route::post('/api/logout','Auth@logout');
     Route::post('/api/submit_code', 'SimulatorCall@submitCode');
 });
