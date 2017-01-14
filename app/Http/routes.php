@@ -12,7 +12,16 @@
 */
 // Frontend routes
 Route::get('/', function () {
-    return view('welcome');
+    return view('home');
+});
+Route::get('/teams', function () {
+    return view('teams');
+});
+Route::get('/login', function () {
+    return view('login');
+});
+Route::get('/docs', function () {
+    return view('docs');
 });
 
 // API routes 
