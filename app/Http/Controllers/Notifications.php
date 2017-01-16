@@ -11,6 +11,7 @@ use Validator;
 use Sangria\JSONResponse;
 
 use App\Registration;
+use App\Notification;
 use App\Invite;
 use App\Team;
 
@@ -19,6 +20,8 @@ class Notifications extends Controller
     /**
      * Display all the notifications a user has received
      * This includes team and subission notifications
+     * This DOES NOT return JSON. This is for directly injecting
+     * into blade templates. The Controller returns a view.
      *
      * @param emailId
      * @return \Illuminate\Http\Response
@@ -27,18 +30,29 @@ class Notifications extends Controller
     {
         try {
             $validator = Validator::make($request->all(), [
-                'emailId'   => 'required',
+                //'emailId'   => 'required',
             ]);
 
             if($validator->fails()) {
                 $message = $validator->errors()->all();
-                return JSONResponse::response(400, $message);
+                return $message;
             } 
+            //$emailId = $request->input('emailId');
+            $emailId = 'venkat@venkat.com';
+            $userId = Registration::where('emailId','=',$emailId)
+                                  ->first()
+                                  ->pluck('id');
 
-            return JSONResponse::response(200,"Registration complete");
+            $notifications = Notification::where('userId','=',$userId)
+                                         ->get();
+
+            return view('notifications',[
+                'notifications' => $notifications,
+            ]);
+
         } catch (Exception $e) {
             Log::error($e->getMessage()." ".$e->getLine());
-            return JSONResponse::response(500, $e->getMessage());
+            return $e->getMessage();
         }
     }
 }
