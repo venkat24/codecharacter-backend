@@ -23,7 +23,8 @@ Route::get('/login', function () {
 Route::get('/docs', function () {
     return view('docs');
 });
-
+Route::get('/notifications','Notifications@showAllNotifications');
+Route::get('/leaderboard','LeaderboardController@getLeaderboard');
 // API routes
 Route::group(['middleware' => 'setResponseHeaders'], function() {
     Route::post('api/send_invite','Registrations@sendInvite'); 
