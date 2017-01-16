@@ -16,7 +16,8 @@ class CreateLeaderboardTable extends Migration
             $table->increments('id');
             $table->integer('level')->default(1);
             $table->integer('score')->default(0);
-            $table->integer('teamId'); //Foreign Key to Teams
+            $table->integer('teamId')->unsigned();
+            $table->foreign('teamId')->references('id')->on('teams');
         });
     }
 
