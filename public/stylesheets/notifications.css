@@ -1,0 +1,14 @@
+.callout-container {
+  border: 1px solid gray;
+  margin: 10px auto;
+  padding: 20px;
+  padding-left: 20px;
+}
+
+.primary {
+  background-color: #D7ECFA;
+}
+
+.alert {
+  background-color: #F7E4E1;
+}
