@@ -19,9 +19,11 @@
   
   <div class="row">
     <div class="twelve columns">
-      <h2 class="text-center" id="main-heading">@{{title}}</h2>
-      <hr />
-    </div>
+			<div class="container">
+				<h1 class="text changing-heading" style="color:#444444" ></h1>
+			</div>
+    	<hr />
+		</div>
   </div>
   <!-- Second Band (Image Left with Text) -->
   

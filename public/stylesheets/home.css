@@ -1,3 +1,22 @@
-#login-button {
-    margin-left: 20px;
+@import 'https://fonts.googleapis.com/css?family=Roboto+Mono:100';
+.changing-container {
+  font-family: 'Roboto Mono', monospace;
+  height: 100%;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+}
+.changing-text {
+  font-weight: 100;
+  font-size: 98px;
+  color: #444444;
+}
+.dud {
+  color: #888888;
+}
+.changing-heading {
+  font-size: 42px;
+  font-weight: bold;
+  font-family: 'Roboto Mono', monospace;
 }
