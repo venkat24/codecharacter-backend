@@ -24,9 +24,13 @@ class LeaderboardController extends Controller
      */
     public function getLeaderboard(Request $request) {
         try {
-            $leaderboard = Leaderboard::orderBy('level','desc')
-                                      ->orderBy('score','desc')
+          $leaderboard = Leaderboard::join('teams','teams.id','=','leaderboard.teamId')
+                                      ->orderBy('leaderboard.level','desc')
+                                      ->orderBy('leaderboard.score','desc')
+                                      ->select('leaderboard.score','leaderboard.level','teams.teamName')
+                                      ->take(3)
                                       ->get();
+
             return view('leaderboard',[
               'leaderboard' => $leaderboard
             ]);
