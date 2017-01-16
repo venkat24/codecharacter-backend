@@ -26,9 +26,11 @@
     </div>
     <div class="nine columns">
       <ul class="nav-bar right">
-        <li><a href="/teams">Teams</a></li>
         <li><a href="/rules">Rules</a></li>
+        <li><a href="/leaderboard">Leaderboard</a></li>
         <li><a href="/docs">Documentation</a></li>
+        <li><a href="/notifications">Notifications</a></li>
+        <li><a href="/teams">Your Team</a></li>
         <li><a href="/login">Login</a></li>
       </ul>
     </div>
@@ -43,7 +45,7 @@
       <hr />
       <div class="row">
         <div class="six columns">
-          <p>&copy; Copyright Pragyan 2017. Made with ♥ by Delta Force</p>
+          <p>&copy; Copyright <a href="http://pragyan.org">Pragyan</a> 2017. Made with ♥ by <a href="http://deltaforce.club">Delta Force</a></p>
         </div>
         <div class="six columns">
           <ul class="link-list right">
@@ -58,9 +60,10 @@
   </footer>
   <!-- Included JS Files (Compressed) -->
   <script src="{{asset('javascripts/foundation.min.js')}}"></script>
+  <script src="{{asset('javascripts/base.js')}}"></script>
   
   <!-- Initialize JS Plugins -->
-  <script src="{{asset('javascripts/app.js"')}}"></script>
+  <script src="{{asset('javascripts/app.js')}}"></script>
 </body>
 </html>
 
