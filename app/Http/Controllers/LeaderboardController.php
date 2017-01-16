@@ -28,7 +28,7 @@ class LeaderboardController extends Controller
                                       ->orderBy('leaderboard.level','desc')
                                       ->orderBy('leaderboard.score','desc')
                                       ->select('leaderboard.score','leaderboard.level','teams.teamName')
-                                      ->take(3)
+                                      ->take(5)
                                       ->get();
 
             return view('leaderboard',[
