@@ -2,8 +2,7 @@
 
 @section('links')
   <title>Welcome to Foundation | Banded</title>
-  <link rel="stylesheet" href="{{asset('stylesheets/team.css')}}">
-  <script src="{{asset('javascripts/team.js')}}"></script>
+  <link rel="stylesheet" href="{{asset('stylesheets/teams.css')}}">
 @endsection
 
 @section('main')
@@ -32,25 +31,14 @@
   <div>
     <h4 class="text-center">Add/Remove Team Members</h4>
     <div class="row">
-      <div class="large-12 columns">
-        <label>Input Label
-          <input type="text" placeholder="pragyanId" />
-        </label>
+      <div id="team-info" class="large-12 columns">
+        <input type="text" placeholder="Team Name" />
+        <button class="button expanded" v-on:click="create">@{{ buttonText }} Team</button> <br />
+        <team-member v-if="teamMemberSeen" v-for="item in teamMembers" v-bind:member="item"></team-member> <br />
+        <button class="button small" v-if="buttonSeen" v-on:click="add">Add Member</button>
       </div>
     </div>
   </div>
 
-  <!-- Team Member Component Starts Here -->
-
-  <script type="text/template" id="new-team-member-template">
-    <div>
-      <div class="twelve columns">
-        <h4 class="text-center">Add/Remove Team Members</h4>
-      </div>
-    </div>
-  </script>
-
-  <!-- Team Member Component Ends Here-->
-  
-<script src="{{asset('javascripts/home.js')}}"></script>
+<script src="{{asset('javascripts/teams.js')}}"></script>
 @endsection
