@@ -10,6 +10,7 @@ use App\Http\Controllers\Controller;
 use Validator;
 use Sangria\JSONResponse;
 
+use App\Http\Controllers\Notifications;
 use App\Registration;
 use App\Invite;
 use App\Team;
@@ -147,6 +148,24 @@ class Registrations extends Controller
                 'toRegistrationId' => $toRegistrationId,
                 'fromTeamId'       => $fromTeamId,
             ]);
+
+            /**
+             * Send the invite notitfication to the receiver, with a 
+             * link to to the confirmation link, with $message and $title
+             */
+            $title = "Invitation to Join Team $teamName";
+            $message = "
+              You have been invited to join team $teamName. 
+              <br />
+              <br />
+              Click the following link to accept the invitation : 
+              <br />
+              <button class='button' onclick='acceptInvite()'>
+                Accept Invitation
+              </button>
+            ";
+            Notifications::sendNotification($toRegistrationId,$title,$message);
+
             $response = JSONResponse::response(200, 'Invite Sent');
             return $response;
 
