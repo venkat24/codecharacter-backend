@@ -13,6 +13,14 @@
     <script src="https://unpkg.com/vue/dist/vue.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.6/handlebars.min.js"></script>
     <script src="{{asset('javascripts/modernizr.foundation.js')}}"></script>
+
+    <!-- This stuff has to move to the backend -->
+    <script id="constants">
+      var SITE_BASE_URL = "{{url('/')}}";
+      var PRAGYAN_BASE_URL = "api.pragyan.org";
+      var EVENT_ID = 31;
+      var EVENT_SECRET = "THIS IS THE EVENT SECRET"; 
+    </script>
     @yield('links')
 </head>
 @yield('pre-main')
