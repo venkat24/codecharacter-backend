@@ -18,6 +18,23 @@ use App\Team;
 class Notifications extends Controller
 {
     /**
+     * Utility function for internal use, not a Controller
+     * Adds a new notification given the title, message, and
+     * userId to send the Notification to.
+     *
+     * @param userId
+     * @param title
+     * @param message
+     */
+    public static function sendNotification($userId, $title, $message) {
+        $insert_response = Notification::insert([
+            'title' => $title,
+            'userId' => $userId,
+            'message' => $message
+        ]);
+    }
+    
+    /**
      * Display all the notifications a user has received
      * This includes team and subission notifications
      * This DOES NOT return JSON. This is for directly injecting
@@ -25,7 +42,7 @@ class Notifications extends Controller
      *
      * @param emailId
      * @return \Illuminate\Http\Response
-     */
+     */  
     public function showAllNotifications(Request $request)
     {
         try {
