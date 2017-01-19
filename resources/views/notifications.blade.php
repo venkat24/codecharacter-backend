@@ -18,8 +18,7 @@
     <div class="twelve columns callout-container primary">
       <div class="callout">
         <h5>{{$notif->title}}</h5>
-        <p>{{$notif->message}}</p>
-        <a href="#">It's dangerous to go alone, take this.</a>
+        <p>{!! $notif->message !!}</p>
       </div>
     </div>
       @endforeach
