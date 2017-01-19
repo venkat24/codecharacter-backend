@@ -30,7 +30,11 @@
   
   <div class="row">
     <div class="three columns">
-      <h1><img src="http://placehold.it/400x100&text=Logo" /></h1>
+      <h1>
+      <a href="/">
+        <img src="http://placehold.it/400x100&text=Logo" />
+      </a>
+      </h1>
     </div>
     <div class="nine columns">
       <ul class="nav-bar right">
@@ -66,11 +70,9 @@
       </div>
     </div> 
   </footer>
-  <!-- Included JS Files (Compressed) -->
+  
   <script src="{{asset('javascripts/foundation.min.js')}}"></script>
   <script src="{{asset('javascripts/base.js')}}"></script>
-  
-  <!-- Initialize JS Plugins -->
   <script src="{{asset('javascripts/app.js')}}"></script>
 </body>
 </html>
