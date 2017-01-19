@@ -39,11 +39,18 @@ function invite(button) {
 	var teamName = document.getElementById('team-name').value;
 	var emails = document.getElementsByClassName('memberEmail');
 	var email = emails[emails.length-1].value;
-	$.ajax({
-		url: '/api/sendInvite',
-		data: {teamName: teamName, email: email}
-	}).done(function(data) {
-		if (data.statusCode == 200){
+	var method = 'POST';
+
+	var request = $.ajax({
+		url: '/api/send_invite',
+		type: method,
+		data: {
+		  teamName: teamName,
+		  email: email
+		},
+	});
+	request.done(function(data) {
+		if (data.status_code == 200){
 			if (teamData.teamMembers.length < 3)
 				teamData.buttonSeen = true;
 			email = document.getElementsByClassName('memberEmail');
@@ -53,7 +60,8 @@ function invite(button) {
 			button.disabled = true;
 			console.log('INVITE');
 		}
-	}).fail(function(jqXHR, textStatus, err) {
+	});
+	request.fail(function(jqXHR, textStatus, err) {
 		return console.log(err.toString());
 	});
 }
