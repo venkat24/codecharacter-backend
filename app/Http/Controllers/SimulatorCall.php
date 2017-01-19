@@ -42,24 +42,29 @@ class SimulatorCall extends Controller
      * 200 status_code if there is no job in the queue
      * 400 status_code if there is a job currently runniong or waiting
      *
-     * @param teamId
+     * @param teamName
      * @return response with the afforementioned status codes and the message
      * key containing the current job status
      *
      */
     public function checkJobStatus(Request $request) {
         $validator = Validator::make($request->all(),[
-            'teamId' => 'required|integer'
+            'teamName' => 'required|string'
         ]);
         if ($validator->fails()) {
             return JSONResponse::response(400,'Invalid parameters');
         }
-        $teamId = $request->input('teamId'); 
+        $teamName = $request->input('teamName'); 
+
+        $teamId = Team::where('teamName','=',$teamName)
+                      ->first()
+                      ->pluck('id');
+
         $job = Submissions::where('teamId','=',$teamId)
-                               ->get();
-        if($job->isEmpty()) {
-            return JSONResponse::response(200, "No submissons made yet"); 
-        } else {
+                          ->orderBy('created_at','desc')
+                          ->first();
+
+        if($job) {
             $status_code = 200;
             $message = "";
             if ($job_status == "ACCEPTED" || $job_status == "REJECTED") {
@@ -69,14 +74,8 @@ class SimulatorCall extends Controller
                 $status_code = 400;
                 $message = $job_status;
             }
-            switch($job_status) {
-                case "WAITING" :
-                    $status_code = 400;
-                    $message = "WAITING";
-                case "RUNNING" :
-                    $status_code = 400;
-                    $message = "RUNNING";
-            }
+        } else {
+            return JSONResponse::response(200, "NO SUBMISSIONS"); 
         }
         return JSONResponse::response($status_code,$message);
     }
