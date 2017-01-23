@@ -33,6 +33,8 @@ Route::get('/notifications','Notifications@showAllNotifications');
 Route::get('/leaderboard','LeaderboardController@getLeaderboard');
 // API routes
 Route::group(['middleware' => 'setResponseHeaders'], function() {
+    Route::post('api/create_team','Registrations@createTeam');
+    Route::get('api/get_team_members','Registrations@getTeamMembers');
     Route::post('api/send_invite','Registrations@sendInvite'); 
     Route::post('api/confirm_invite','Registrations@confirmInvite'); 
     Route::get('/api/check_job_status', 'SimulatorCall@checkJobStatus');
