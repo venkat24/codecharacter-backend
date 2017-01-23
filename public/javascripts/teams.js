@@ -10,6 +10,7 @@ var teamData = new Vue({
 	data: {
 		buttonText: 'Create',
 		teamMemberSeen: false,
+		newTeamName: USER_DATA.teamName,
 		buttonSeen: false,
 		teamMembers: [
 			{name: 'testName', email: 'email@pragyan.com'}
