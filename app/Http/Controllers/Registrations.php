@@ -18,62 +18,44 @@ use App\Team;
 class Registrations extends Controller
 {
     /**
-     * Add a new participant to Code Character
-     * Takes all the registration parameters and inserts into the
-     * registrations database without a foreign key check to teams
+     * Create Team
      *
-     * @param pragyanId
-     * @param password
-     * @param name
      * @param teamName
-     * @param emailId
-     * @param phoneNo
+     * @param leaderEmail
      * @return \Illuminate\Http\Response
      */
-    public function newRegistration(Request $request)
-    {
+    public function createTeam(Request $request) {
         try {
             $validator = Validator::make($request->all(), [
-                'pragyanId' => 'required|integer',
-                'password'  => 'required',
-                'name'      => 'required',
-                'emailId'   => 'required',
-                'phoneNo'   => 'required|integer|digits:10',
-                'teamName'  => 'required',
+                'teamName'    => 'required|string',
+                'leaderEmail' => 'required|string',
             ]);
-
             if($validator->fails()) {
                 $message = $validator->errors()->all();
                 return JSONResponse::response(400, $message);
             }
+            $leaderEmail = $request->input('leaderEmail');
+            $leaderRegId = Registration::where('emailId','=',$leaderEmail)
+                               ->pluck('id');
 
-            $salt = getenv('PASSWORD_SECRET');
-            $password = sha1($request->input('password').$salt);
-            $registrationId = Registration::insertGetId([
-                'pragyanId' => $request->input('pragyanId'),
-                'emailId'   => $request->input('emailId'),
-                'teamName'  => $request->input('teamName'),
-                'phoneNo'   => $request->input('phoneNo'),
-                'name'      => $request->input('name'),
-                'password'  => $password,
-            ]);
-            // Team name insertion
             $teamName = $request->input('teamName');
-            $checkForTeamName = Team::where('teamName','=',$teamName)
-                ->get();
+            $teamNameCheck = Team::where('teamName','=',$teamName)
+                                 ->first();
 
-            // Create a new team if the user is the team leader
-            // (registering as the first member)
-            if($checkForTeamName->isEmpty()) {
-                $teamCreationResponse = Team::insert([
+            if($teamNameCheck) {
+                // Team Alreafy Exists
+                return JSONResponse::response(400,"Team Name already in use");
+            } else {
+                // New Team Creation
+                $teamInsert = Team::insert([
                     'teamName'             => $teamName,
-                    'leaderRegistrationId' => $registrationId,
+                    'leaderRegistrationId' => $leaderRegId,
                     'currentLevel'         => 0,
                     'score'                => 0,
-                ]);
+                  ]);
+                return JSONResponse::response(200,"Team Created");
             }
 
-            return JSONResponse::response(200,"Registration complete");
         } catch (Exception $e) {
             Log::error($e->getMessage()." ".$e->getLine());
             return JSONResponse::response(500, $e->getMessage());
