@@ -67,7 +67,6 @@ class Auth extends Controller
                 if(isset($checkForUser->teamName)) {
                     Session::put([
                         'team_name' => $checkForUser->teamName,
-                        'user_email' => $pragyanEmail,
                     ]);
                 }
             } else {
@@ -81,6 +80,7 @@ class Auth extends Controller
 
             Session::put([
               'user_fullname' => $fullName,
+              'user_email' => $pragyanEmail,
             ]);
 
             return JSONResponse::response(200, "Login Success");
