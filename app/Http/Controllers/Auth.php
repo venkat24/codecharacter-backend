@@ -13,6 +13,8 @@ use Exception;
 use Session;
 use App\Registration;
 use Sangria\JSONResponse;
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
 
 class Auth extends Controller
 {
@@ -25,8 +27,8 @@ class Auth extends Controller
     public function login(Request $request)   {
         try {
             $validator = Validator::make($request->all(),[
-                'pragyanId' => 'required|integer',
-                'password'  => 'required'
+                'pragyanEmail' => 'required|string',
+                'password'     => 'required|string'
             ]);
 
             if($validator->fails()) {
@@ -34,34 +36,55 @@ class Auth extends Controller
                 return JSONResponse::response(400,$response);
             }
 
-            $pragyanId = $request->input('pragyanId');
-            $password = $request->input('password');
-            $user = Registration::where('pragyanId', '=', $pragyanId)
-                                ->first();
+            $pragyanEmail = $request->input('pragyanEmail');
+            $password     = $request->input('password');
 
-            $salt = getenv('PASSWORD_SECRET');
-            
-            if($user)  {
-                if(sha1($password.$salt) === $user->password)    {
-                    //set session                                 
-                    Session::put(['pragyanId' => $user->pragyanId]);                                        
-                    Log::info($pragyanId . " has logged in"); 
-                    return JSONResponse::response(200, "Success");
-                }
-                else    {
-                    //return 401 for unauthorized access
-                    $status_code = 401;
-                    $response = "Incorrect password";
-                }
-            }   
-            else    {
-                //return 401 for unauthorized access
-                $status_code = 401;
-                $response = "Not a registered user";
-            }     
+            $client = new Client();
+            $url = env("API_BASE_URL") . "/event/login";
+            $resultRaw = $client->post(($url), [
+              'form_params' => [
+                        'user_email'   => $pragyanEmail,
+                        'user_pass'    => $password,
+                        'event_id'     => env("EVENT_ID"),
+                        'event_secret' => env("EVENT_SECRET"),
+                      ]
+            ]);
 
-            //the return statement for all errors
-            return JSONResponse::response($status_code, $response);             
+            $result = json_decode($resultRaw->getBody());
+
+            if(is_object($result)) {
+              $fullName = $result->message->user_fullname;
+            } else {
+              return JSONResponse::response(400, "Login Failed");
+            }
+
+            $checkForUser = Registration::where('emailid','=',$pragyanEmail)
+                                        ->first();
+
+            if($checkForUser) {
+                // The user exists
+                // Check if the user is already in a team
+                if(isset($checkForUser->teamName)) {
+                    Session::put([
+                        'team_name' => $checkForUser->teamName,
+                        'user_email' => $pragyanEmail,
+                    ]);
+                }
+            } else {
+                // Register the user
+                $registrationId = Registration::insertGetId([
+                    'emailId'   => $pragyanEmail,
+                    'name'      => $fullName,
+                ]);
+                //He will not have a team at this point
+            }
+
+            Session::put([
+              'user_fullname' => $fullName,
+            ]);
+
+            return JSONResponse::response(200, "Login Success");
+
         } catch (Exception $e) {
             Log::error($e->getMessage()." ".$e->getLine());
             return JSONResponse::response(500, $e->getMessage());
