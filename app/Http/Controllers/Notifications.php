@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
+use Redirect;
+use Session;
 use Validator;
 use Sangria\JSONResponse;
 
@@ -45,28 +47,24 @@ class Notifications extends Controller
      */  
     public function showAllNotifications(Request $request)
     {
-        try {
-            $validator = Validator::make($request->all(), [
-                //'emailId'   => 'required',
-            ]);
+      try {
+            $username = Session::get('user_fullname');
+            $loginUrl = '/login';
+            if(!$username) {
+                return Redirect::away($loginUrl);
+            } else {
+                $emailId = Session::get('user_email');
+                $userId = Registration::where('emailId','=',$emailId)
+                                      ->first()
+                                      ->pluck('id');
 
-            if($validator->fails()) {
-                $message = $validator->errors()->all();
-                return $message;
-            } 
-            //$emailId = $request->input('emailId');
-            $emailId = 'venkat@venkat.com';
-            $userId = Registration::where('emailId','=',$emailId)
-                                  ->first()
-                                  ->pluck('id');
+                $notifications = Notification::where('userId','=',$userId)
+                                             ->get();
 
-            $notifications = Notification::where('userId','=',$userId)
-                                         ->get();
-
-            return view('notifications',[
-                'notifications' => $notifications,
-            ]);
-
+                return view('notifications',[
+                    'notifications' => $notifications,
+                ]);
+            }
         } catch (Exception $e) {
             Log::error($e->getMessage()." ".$e->getLine());
             return $e->getMessage();
