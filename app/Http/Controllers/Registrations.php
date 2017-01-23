@@ -57,6 +57,10 @@ class Registrations extends Controller
                     'currentLevel'         => 0,
                     'score'                => 0,
                   ]);
+                $userInsert = Registration::where('id','=',$leaderRegId)
+                  ->update([
+                    'teamName' => $teamName,
+                  ]);
                 return JSONResponse::response(200,"Team Created");
             }
 
