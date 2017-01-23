@@ -56,6 +56,7 @@
         <li><a href="/leaderboard">Leaderboard</a></li>
         <li><a href="/docs">Documentation</a></li>
         <li><a href="/notifications">Notifications</a></li>
+        <li><a href="/submit">Submit</a></li>
         <li><a href="/teams">Your Team</a></li>
         @if (Session::get('user_email'))
         <li><a href="/login">Logout</a></li>
