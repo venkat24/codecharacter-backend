@@ -16,10 +16,13 @@
 
     <!-- This stuff has to move to the backend -->
     <script id="constants">
-      var SITE_BASE_URL = "{{url('/')}}";
-      var PRAGYAN_BASE_URL = "api.pragyan.org";
-      var EVENT_ID = 31;
-      var EVENT_SECRET = "THIS IS THE EVENT SECRET"; 
+      var PRAGYAN_BASE_URL = "{{env('PRAGYAN_BASE_URL')}}";
+      var SITE_BASE_URL = "{{env('SITE_BASE_URL')}}";
+      var USER_DATA = {
+        teamName  : "{{Session::get('team_name')}}",
+        userName  : "{{Session::get('user_fullname')}}",
+        userEmail : "{{Session::get('user_email')}}",
+      };
     </script>
     @yield('links')
 </head>
@@ -29,6 +32,17 @@
   <!-- Header and Nav -->
   
   <div class="row">
+    @if ( Session::get('user_fullname') != "" )
+    <div style="float: right">
+      Welcome {{Session::get('user_fullname')}}  
+    </div>
+    @endif
+    @if ( Session::get('team_name') != "" )
+    <br />
+    <div style="float: right">
+      You're part of team {{Session::get('team_name')}}  
+    </div>
+    @endif
     <div class="three columns">
       <h1>
       <a href="/">
@@ -43,7 +57,11 @@
         <li><a href="/docs">Documentation</a></li>
         <li><a href="/notifications">Notifications</a></li>
         <li><a href="/teams">Your Team</a></li>
+        @if (Session::get('user_email'))
+        <li><a href="/login">Logout</a></li>
+        @else
         <li><a href="/login">Login</a></li>
+        @endif
       </ul>
     </div>
   </div>
@@ -58,14 +76,6 @@
       <div class="row">
         <div class="six columns">
           <p>&copy; Copyright <a href="http://pragyan.org">Pragyan</a> 2017. Made with ♥ by <a href="http://deltaforce.club">Delta Force</a></p>
-        </div>
-        <div class="six columns">
-          <ul class="link-list right">
-            <li><a href="#">Link 1</a></li>
-            <li><a href="#">Link 2</a></li>
-            <li><a href="#">Link 3</a></li>
-            <li><a href="#">Link 4</a></li>
-          </ul>
         </div>
       </div>
     </div> 
