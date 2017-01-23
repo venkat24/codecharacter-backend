@@ -61,6 +61,18 @@ class Registrations extends Controller
             return JSONResponse::response(500, $e->getMessage());
         }
     }
+    public function getTeamMembers(Request $request) {
+            $validator = Validator::make($request->all(), [
+                'teamName'    => 'required|string',
+            ]);
+            if($validator->fails()) {
+                $message = $validator->errors()->all();
+                return JSONResponse::response(400, $message);
+            }
+            $teamMembers = Registration::where('teamName','=',$request->input('teamName'))
+                                       ->get();
+            return JSONResponse::response(200, $teamMembers);
+    }
 
     /**
      * Function to check if a team name is already taken.
