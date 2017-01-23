@@ -27,7 +27,11 @@ Route::get('/rules', function () {
     return view('rules');
 });
 Route::get('/submit', function () {
-    return view('submit');
+    if(Session::get('user_email')) {
+        return view('submit');
+    } else {
+        return Redirect::to('/login');
+    }
 });
 Route::get('/notifications','Notifications@showAllNotifications');
 Route::get('/leaderboard','LeaderboardController@getLeaderboard');
