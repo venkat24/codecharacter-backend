@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 // function check() {
 // 	console.log('checking');
 // 	var span = document.getElementById('check');
