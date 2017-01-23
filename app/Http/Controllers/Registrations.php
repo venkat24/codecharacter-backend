@@ -77,8 +77,25 @@ class Registrations extends Controller
                 $message = $validator->errors()->all();
                 return JSONResponse::response(400, $message);
             }
-            $teamMembers = Registration::where('teamName','=',$request->input('teamName'))
-                                       ->get();
+            $teamName = $request->input('teamName');
+            $teamMembers = Registration::where('teamName','=',$teamName)
+                                       ->get(['name','emailId','id']);
+
+            $fromTeamId = Team::where('teamName','=',$teamName)
+                              ->pluck('id');
+
+
+            
+            for ($i = 0; $i < $teamMembers->count(); $i++) {
+                $member = $teamMembers[$i];
+                $memberCheck = Invite::where('fromTeamId','=',$fromTeamId)
+                                     ->pluck('status');
+                if($memberCheck) {
+                    $teamMembers[$i]->status = $memberCheck;
+                } else {
+                    $teamMembers[$i]->status = "NO INVITE";
+                }
+            }
             return JSONResponse::response(200, $teamMembers);
     }
 
