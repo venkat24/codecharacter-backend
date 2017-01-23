@@ -36,11 +36,15 @@ class Registrations extends Controller
             }
             $leaderEmail = $request->input('leaderEmail');
             $leaderRegId = Registration::where('emailId','=',$leaderEmail)
-                               ->pluck('id');
+                                       ->pluck('id');
 
             $teamName = $request->input('teamName');
             $teamNameCheck = Team::where('teamName','=',$teamName)
                                  ->first();
+
+            Session::put([
+              'user_name' => $teamName
+            ]);
 
             if($teamNameCheck) {
                 // Team Alreafy Exists
