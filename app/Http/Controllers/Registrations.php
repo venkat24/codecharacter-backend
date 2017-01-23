@@ -106,6 +106,7 @@ class Registrations extends Controller
      * Sends invite to the specified email address
      * This will also ad an invite notification to the
      * receiver of the invite
+     * Returns the name of the receiving participant as the response;
      *
      * @param teamName
      * @param email
@@ -130,6 +131,7 @@ class Registrations extends Controller
             $teamName = $request->input('teamName');
             $email    = $request->input('email');
 
+
             $fromTeamId = Team::where('teamName','=',$teamName)
                               ->first()
                               ->pluck('id');
@@ -149,19 +151,22 @@ class Registrations extends Controller
              */
             $title = "Invitation to Join Team $teamName";
             $message = "
+              <br />
               You have been invited to join team $teamName. 
               <br />
-              <br />
               Click the following link to accept the invitation : 
-              <br />
               <button class='button' onclick='acceptInvite()'>
+              <button class='button'>
                 Accept Invitation
               </button>
             ";
             Notifications::sendNotification($toRegistrationId,$title,$message);
 
-            $response = JSONResponse::response(200, 'Invite Sent');
-            return $response;
+            $participantName = Registration::where('emailId','=',$email)
+                                             ->first()
+                                             ->pluck('name');
+
+            return JSONResponse::response(200, $participantName);
 
         } catch (Exception $e) {
             Log::error($e->getMessage()." ".$e->getLine());
