@@ -79,6 +79,14 @@ class SimulatorCall extends Controller
         }
         return JSONResponse::response($status_code,$message);
     }
+    /**
+     * Submit a zip file to the server and call the simulator
+     *
+     * @param teamId
+     * @param teamName
+     * @param file
+     * @return \Illuminate\Http\Response
+     */
     public function submitCode(Request $request)
     {
         $validator = Validator::make($request->all(),[
