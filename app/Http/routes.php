@@ -18,7 +18,11 @@ Route::get('/teams', function () {
     return view('teams');
 });
 Route::get('/login', function () {
-    return view('login');
+    if(Session::get('user_email')) {
+        return view('home');
+    } else {
+        return view('login');
+    }
 });
 Route::get('/docs', function () {
     return view('docs');
@@ -28,15 +32,21 @@ Route::get('/rules', function () {
 });
 Route::get('/submit', function () {
     if(Session::get('user_email')) {
-        return view('submit');
+        if (Session::get('team_name')) {
+            return view('submit');
+        } else {
+            return Redirect::to('/teams');
+        }
     } else {
         return Redirect::to('/login');
     }
 });
+
 Route::get('/notifications','Notifications@showAllNotifications');
 Route::get('/leaderboard','LeaderboardController@getLeaderboard');
 // API routes
 Route::group(['middleware' => 'setResponseHeaders'], function() {
+    Route::get('api/simstart','SimulatorCall@callSimulator');
     Route::post('api/create_team','Registrations@createTeam');
     Route::get('api/get_team_members','Registrations@getTeamMembers');
     Route::post('api/send_invite','Registrations@sendInvite'); 
