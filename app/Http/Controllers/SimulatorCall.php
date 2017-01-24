@@ -3,44 +3,27 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-use App\Jobs\simulation;
+use App\Jobs\SimulatorProcess;
 use Sangria\JSONResponse;
 use Validator;
 
-use App\Jobs;
+use App\Job;
 use App\Submissions;
 use App\Team;
 
 class SimulatorCall extends Controller
 {
-    public function callsimulator(Request $request)
+    public function callsimulator($fileName)
     {
-        $validator = Validator::make($request->all(),[
-            'teamId' => 'required|integer'
-        ]);
-        if ($validator->fails()) {
-            return JSONResponse::response(400,'Invalid parameters');
-        }
-        $team_id = $request->input('team_id');
-        $teams = Jobs::where(['team_id','=',$team_id],['status','=','Pending'])
-                           ->first();
-        if ($teams > 0) {
-            $update_job_status = Jobs::where(['team_id','=',$team_id],['status','=','Pending'])
-                                           ->first();
-            $update_job_status->status = 'Cancelled';
-            $update_job_status->save();
-        }
-        $job_status = new JobsStatus();
-        $job_status->team_id = $team_id;
-        $job_status->status = "Pending";
-        $job_status->save();
-        $this->dispatch(new Simulation); //Name of the job
-        return JSONResponse::response(200, 'Successfully queued');
+        $this->dispatch(new SimulatorProcess($fileName));
     }
+
     /**
      * Returns the job status of the current team's task
      * 200 status_code if there is no job in the queue
      * 400 status_code if there is a job currently runniong or waiting
+     * This route will not work unless the job status is being set 
+     * in the SimulatorProcess Job
      *
      * @param teamName
      * @return response with the afforementioned status codes and the message
@@ -79,6 +62,7 @@ class SimulatorCall extends Controller
         }
         return JSONResponse::response($status_code,$message);
     }
+
     /**
      * Submit a zip file to the server and call the simulator
      *
@@ -90,40 +74,39 @@ class SimulatorCall extends Controller
     public function submitCode(Request $request)
     {
         $validator = Validator::make($request->all(),[
-            'teamId' => 'required|integer',
             'teamName' => 'required|string',
-            'file' => 'mimes:zip'
+            'file'     => 'required',
         ]);
         if ($validator->fails())
         {
-            return JSONResponse::response(400,'Invalid parameters');
+            $message = $validator->errors()->all();
+            return JSONResponse::response(400,$message);
         }
+        $file = $request->file('file');
         $team_name = $request->input('teamName');
-        $team_id = $request->input('teamId');
-        if($request->file('file')->isValid())
-        {
-            $filename = substr(md5(rand()), 0, 8)."_".$team_name;
+        $team_id = Team::where('teamName','=',$team_name)
+                       ->pluck('id');
+
+        $ext = $file->getClientOriginalExtension();
+        if($file->isValid()) {
+            $filename = substr(md5(rand()), 0, 8)."_".$team_name.".".$ext;
             str_replace(" ", "_", $filename);
             $file = $request->file('file');
             $file->move(storage_path('submissions'), $filename);
-        }
-        else
-        {
+        } else {
             return JSONResponse::response(422,'Invalid file');
         }
-        $team = Team::where('teamId','=',$team_id)
+        $team = Team::where('id','=',$team_id)
                                ->get();
-        if($team->isEmpty())
-        {
+        if($team->isEmpty()) {
             return JSONResponse::response(400,'Invalid team id');
-        }
-        else
-        {
+        } else {
             $submission = Submissions::insert([
                     'teamId' => $team_id,
                     'levelNo'  => 0,
                     'sourceCodePath' => storage_path('submissions').$filename
             ]);
+            $this->callSimulator($filename);
             return JSONResponse::response(200, 'Upload successful');
         }
     }
