@@ -55,11 +55,11 @@
         <li><a href="/rules">Rules</a></li>
         <li><a href="/leaderboard">Leaderboard</a></li>
         <li><a href="/docs">Documentation</a></li>
+        @if (Session::get('user_email'))
         <li><a href="/notifications">Notifications</a></li>
         <li><a href="/submit">Submit</a></li>
         <li><a href="/teams">Your Team</a></li>
-        @if (Session::get('user_email'))
-        <li><a href="/login">Logout</a></li>
+        <li><a href="#" onclick="logout()">Logout</a></li>
         @else
         <li><a href="/login">Login</a></li>
         @endif
@@ -84,6 +84,7 @@
   
   <script src="{{asset('javascripts/foundation.min.js')}}"></script>
   <script src="{{asset('javascripts/base.js')}}"></script>
+  <script src="{{asset('javascripts/login.js')}}"></script>
   <script src="{{asset('javascripts/app.js')}}"></script>
 </body>
 </html>
