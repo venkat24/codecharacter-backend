@@ -43,7 +43,7 @@ class Registrations extends Controller
                                  ->first();
 
             Session::put([
-              'user_name' => $teamName
+              'team_name' => $teamName
             ]);
 
             if($teamNameCheck) {
@@ -78,24 +78,13 @@ class Registrations extends Controller
                 return JSONResponse::response(400, $message);
             }
             $teamName = $request->input('teamName');
-            $teamMembers = Registration::where('teamName','=',$teamName)
-                                       ->get(['name','emailId','id']);
 
-            $fromTeamId = Team::where('teamName','=',$teamName)
-                              ->pluck('id');
-
-
+            $teamId = Team::where('teamName','=',$teamName)->pluck('id');
             
-            for ($i = 0; $i < $teamMembers->count(); $i++) {
-                $member = $teamMembers[$i];
-                $memberCheck = Invite::where('fromTeamId','=',$fromTeamId)
-                                     ->pluck('status');
-                if($memberCheck) {
-                    $teamMembers[$i]->status = $memberCheck;
-                } else {
-                    $teamMembers[$i]->status = "NO INVITE";
-                }
-            }
+            $teamMembers = Invite::where('fromTeamId','=',$teamId)
+                                  ->join('registrations','invites.toRegistrationId','=','registrations.id')
+                                  ->get(['registrations.name','registrations.emailId','registrations.id','invites.status']);
+
             return JSONResponse::response(200, $teamMembers);
     }
 
@@ -158,7 +147,6 @@ class Registrations extends Controller
 
 
             $fromTeamId = Team::where('teamName','=',$teamName)
-                              ->first()
                               ->pluck('id');
 
             $toRegistrationId = Registration::where('emailId','=',$email)
