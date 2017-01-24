@@ -18,8 +18,8 @@ class checkSession
      */
     public function handle($request, Closure $next)
     {
-        $pragyanId = Session::get('pragyanId');
-        if($pragyanId)
+        $userEmail = Session::get('user_email');
+        if($userEmail)
             return $next($request);
         else {
             $status_code = 401; //unauthorized
