@@ -34,12 +34,14 @@
   <div class="row">
     <div class="twelve columns">
       <h4 class="text-center">Upload</h4>
-      <form type="multipart/form-data">
+      <form enctype="multipart/form-data" id="code-submit-form" method="POST" action="/api/submit_code">
         <label>Upload Zip File
 					<br />
-        	<input type="file" class="show-for-sr"/>
+          <input type="hidden" name="MAX_FILE_SIZE" value="314572800">
+        	<input type="file" name="file" class="show-for-sr"/>
         </label>
-				<button class="button" onclick="submit()">Submit</button>
+        <input type="hidden" id="teamName" name="teamName" value="{{Session::get('team_name')}}" />
+				<button class="button" type="submit">Submit</button>
       </form>
       <hr />
     </div>
