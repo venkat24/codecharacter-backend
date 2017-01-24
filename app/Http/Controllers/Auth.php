@@ -102,7 +102,7 @@ class Auth extends Controller
             $status_code = 200;
             $response = "You have been logged out";
             //Admin has logged out
-            Log::info(Session::get('pragyanId')." logged out");
+            Log::info(Session::get('user_email')." logged out");
             //flush Session
             Session::flush();
             return JSONResponse::response($status_code,$response);
