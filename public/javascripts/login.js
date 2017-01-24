@@ -24,3 +24,19 @@ function login() {
 	});
 }
 
+function logout() {
+  var route = SITE_BASE_URL + '/api/logout';
+	var method = 'POST';
+	var request = $.ajax({
+		url: route,
+		type: method,
+	});
+	request.done(function(data){
+    console.log(data);
+		if(data.status_code == 200) {
+			location.href = SITE_BASE_URL + "/";
+		} else {
+			alert("Sorry! Logout failed.");
+		}
+	});
+}
