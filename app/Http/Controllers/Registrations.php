@@ -81,10 +81,22 @@ class Registrations extends Controller
 
             $teamId = Team::where('teamName','=',$teamName)->pluck('id');
             
+            if(!$teamId)
+            {
+                return JSONResponse::response(400, "TEAM DOESN'T EXIST");
+            }
+
             $teamMembers = Invite::where('fromTeamId','=',$teamId)
                                   ->join('registrations','invites.toRegistrationId','=','registrations.id')
-                                  ->get(['registrations.name','registrations.emailId','registrations.id','invites.status']);
+                                  ->get(['registrations.name','registrations.emailId','registrations.id','invites.status'])
+                                  ->toArray();
 
+            $teamLeader = Team::where('teams.teamName', '=', $teamName)
+                                ->join('registrations', 'teams.leaderRegistrationId', '=','registrations.id')
+                                ->get(['registrations.name','registrations.emailId','registrations.id'])
+                                ->first();
+            $teamLeader["status"] = "LEADER";
+            array_push($teamMembers, $teamLeader);
             return JSONResponse::response(200, $teamMembers);
     }
 
@@ -150,8 +162,12 @@ class Registrations extends Controller
                               ->pluck('id');
 
             $toRegistrationId = Registration::where('emailId','=',$email)
-                                             ->first()
+                                             ->where('teamName', '=', '')
                                              ->pluck('id');
+            if(!$toRegistrationId)
+            {
+                return JSONResponse::response(400, "Member of a team");
+            }
 
             $insertResponse = Invite::insert([
                 'toRegistrationId' => $toRegistrationId,
@@ -174,10 +190,8 @@ class Registrations extends Controller
               </button>
             ";
             Notifications::sendNotification($toRegistrationId,$title,$message);
-
             $participantName = Registration::where('emailId','=',$email)
-                                             ->first()
-                                             ->pluck('name');
+                                            ->pluck('name');
 
             return JSONResponse::response(200, $participantName);
 
@@ -214,36 +228,37 @@ class Registrations extends Controller
              */
 
             $teamName = $request->input('teamName');
-            $LeaderEmail    = $request->input('leaderEmail');
-            $UserEmail      = $request->input('UserEmail');
-
+            $leaderEmail    = $request->input('leaderEmail');
+            $userEmail      = $request->input('userEmail');
             $fromTeamId = Team::where('teamName','=',$teamName)
                               ->first()
                               ->pluck('id');
 
-            $toRegistrationId = Registration::where('emailId','=',$email)
-                                             ->pluck('id')
-                                             ->first();
+            $toRegistrationId = Registration::where('emailId','=',$userEmail)
+                                             ->where('teamName', '=', '')
+                                             ->pluck('id');
+
+            if(!$toRegistrationId)
+            {
+                return JSONResponse::response(400, "Already a member");
+            }
 
             // Match aginst the last invite that was sent to this user
             // from the particular teamName
-            $inviteId = Invite::where('fromTeamId','=',$fromTeamId)
+            $invite = Invite::where('fromTeamId','=',$fromTeamId)
                                ->where('toRegistrationId','=',$toRegistrationId)
-                               ->order_by('id','desc')
-                               ->first()
-                               ->pluck('id');
+                               ->orderBy('id','desc')
+                               ->first();
+            $invite->status = 'ACCEPTED';
+            $invite->save();
 
-            $inviteResponse = Invite::where('id','=',$inviteId)
-                                    ->update([
-                'status' => 'CONFIRMED'
-            ]);
-
-            $teamResponse = Registrations::where('emailId','=',$userEmail)
+            $teamResponse = Registration::where('emailId','=',$userEmail)
                                          ->update([
-                    'teamName' => $teamName
-            ]);
+                                            'teamName' => $teamName
+                                            ]);
 
             $response = JSONResponse::response(200, 'Invite Confirmed');
+            return $response;
 
         } catch (Exception $e) {
             Log::error($e->getMessage()." ".$e->getLine());
