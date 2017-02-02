@@ -1,0 +1,41 @@
+version: '2'
+services:
+  web:
+    image: nginx:latest
+    volumes:
+      - ./docker/nginx/:/etc/nginx/conf.d/
+    ports:
+      - 7000:80
+    volumes_from:
+      - app
+    depends_on:
+      - app
+  app:
+    build: ./docker/app/
+    volumes: 
+      - ./:/var/www/code-character
+    depends_on:
+      - db
+    env_file:
+      - .env
+    environment:
+      - MYSQL_DATABASE:'pragyan17_ppl'
+
+  sim:
+    build: ./docker/sim/
+    volumes: 
+     - ./sim:/var/www/code-character/simulator
+    depends_on:
+      - app
+
+  db:
+    image: mysql:latest
+    volumes:
+      - ./docker/mysql:/var/lib/mysql
+    env_file:
+      - .env
+    environment:
+      MYSQL_DATABASE: code_character
+      MYSQL_ROOT_PASSWORD: pwd
+    ports:
+      - "8000:3306"
