@@ -23,6 +23,6 @@
     </div>
       @endforeach
   </div>
-  
+  <script type="text/javascript" src="{{asset('javascripts/notifications.js')}}"></script>
 @endsection
 
