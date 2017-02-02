@@ -12,6 +12,7 @@ use Sangria\JSONResponse;
 
 use App\Http\Controllers\Notifications;
 use App\Registration;
+use App\Submission;
 use App\Invite;
 use App\Team;
 
@@ -69,6 +70,104 @@ class Registrations extends Controller
             return JSONResponse::response(500, $e->getMessage());
         }
     }
+
+    /**
+     * Delete Team
+     * Completely delete a team from the database
+     * Wipes all of their submissions and leaderboard places
+     *
+     * @param teamName
+     * @return \Illuminate\Http\Response
+     */
+    public function deleteTeam(Request $request) {
+        try {
+            $validator = Validator::make($request->all(), [
+                'teamName'    => 'required|string',
+            ]);
+            if($validator->fails()) {
+                $message = $validator->errors()->all();
+                return JSONResponse::response(400, $message);
+            }
+            $leaderEmail = $request->input('leaderEmail');
+            $leaderRegId = Registration::where('emailId','=',$leaderEmail)
+                                       ->pluck('id');
+
+            $teamName = $request->input('teamName');
+            $teamInfo = Team::where('teamName','=',$teamName)
+                                 ->first();
+
+            if($teamInfo) {
+                Registration::where('teamName','=',$teamName)
+                            ->update([
+                                'teamName' => '',
+                            ]);
+
+                Invites::where('fromTeamId','=',$teamInfo->id)
+                       ->delete();
+
+                Notifications::where('team_name','=',$teamName)
+                             ->delete();
+
+                Submission::where('teamId','=',$teamInfo->id)
+                          ->delete();
+
+                Leaderboard::where('teamId','=',$teamInfo->id)
+                          ->delete();
+
+                Team::where('id','=',$teamId)
+                    ->delete();
+
+                return JSONResponse::response(200,"Team Deleted");
+            } else {
+                return JSONResponse::response(400,"Team Not Found");
+            }
+        } catch (Exception $e) {
+            Log::error($e->getMessage()." ".$e->getLine());
+            return JSONResponse::response(500, $e->getMessage());
+        }
+    }
+
+    /**
+     * Delete Member
+     * Remove a particular member from a team
+     * DOES NOT WORK FOR TEAM LEADER
+     * To delete the leader, use the deleteLeader function instead
+     *
+     * @param teamName
+     * @return \Illuminate\Http\Response
+     */
+    public function deleteMember(Request $request) {
+        try {
+            $validator = Validator::make($request->all(), [
+                'teamName'    => 'required|string',
+                'userEmail'   => 'required|string',
+            ]);
+            if($validator->fails()) {
+                $message = $validator->errors()->all();
+                return JSONResponse::response(400, $message);
+            }
+            $teamName = $request->input('teamName');
+            $teamInfo = Team::where('teamName','=',$teamName)
+                            ->first();
+
+            $userEmail = $request->input('userEmail');
+
+            Registration::where('emailId','=',$userEmail)
+                        ->update([
+                            'teamName' => '',
+                        ]);
+
+        } catch (Exception $e) {
+            Log::error($e->getMessage()." ".$e->getLine());
+            return JSONResponse::response(500, $e->getMessage());
+        }
+    }
+    /**
+     * Function to return the team members in a team, given the team name
+     *
+     * @param teamName
+     * @return Illuminate/Http/Response
+     */
     public function getTeamMembers(Request $request) {
             $validator = Validator::make($request->all(), [
                 'teamName'    => 'required|string',
@@ -80,7 +179,7 @@ class Registrations extends Controller
             $teamName = $request->input('teamName');
 
             $teamId = Team::where('teamName','=',$teamName)->pluck('id');
-            
+
             if(!$teamId)
             {
                 return JSONResponse::response(400, "TEAM DOESN'T EXIST");
@@ -175,23 +274,23 @@ class Registrations extends Controller
             ]);
 
             /**
-             * Send the invite notitfication to the receiver, with a 
+             * Send the invite notitfication to the receiver, with a
              * link to to the confirmation link, with $message and $title
              */
             $title = "Invitation to Join Team $teamName";
             $message = "
               <br />
-              You have been invited to join team $teamName. 
+              You have been invited to join team $teamName.
               <br />
-              Click the following link to accept the invitation : 
-              <button class='button' onclick='acceptInvite()'>
-              <button class='button'>
+              Click the following link to accept the invitation :
+              <button class='button' onclick='acceptInvite(event)' id='$teamName'>
                 Accept Invitation
               </button>
             ";
-            Notifications::sendNotification($toRegistrationId,$title,$message);
+            $message_type = "INVITE";
+            Notifications::sendNotification($toRegistrationId,$title,$message,$message_type);
             $participantName = Registration::where('emailId','=',$email)
-                                            ->pluck('name');
+                                           ->pluck('name');
 
             return JSONResponse::response(200, $participantName);
 
@@ -214,7 +313,6 @@ class Registrations extends Controller
         try {
             $validator = Validator::make($request->all(), [
                 'teamName'        => 'required',
-                'leaderEmail'     => 'required',
                 'userEmail'       => 'required',
             ]);
             if($validator->fails()) {
@@ -228,27 +326,29 @@ class Registrations extends Controller
              */
 
             $teamName = $request->input('teamName');
-            $leaderEmail    = $request->input('leaderEmail');
-            $userEmail      = $request->input('userEmail');
-            $fromTeamId = Team::where('teamName','=',$teamName)
-                              ->first()
-                              ->pluck('id');
+            $userEmail = $request->input('userEmail');
+
+            $fromTeam = Team::where('teamName','=',$teamName)
+                            ->first();
+
+            $leaderEmail = Registration::where('id','=',$fromTeam->id)
+                                       ->first();
 
             $toRegistrationId = Registration::where('emailId','=',$userEmail)
                                              ->where('teamName', '=', '')
                                              ->pluck('id');
 
-            if(!$toRegistrationId)
-            {
+            if(!$toRegistrationId) {
                 return JSONResponse::response(400, "Already a member");
             }
 
             // Match aginst the last invite that was sent to this user
             // from the particular teamName
-            $invite = Invite::where('fromTeamId','=',$fromTeamId)
+            $invite = Invite::where('fromTeamId','=',$fromTeam->id)
                                ->where('toRegistrationId','=',$toRegistrationId)
                                ->orderBy('id','desc')
                                ->first();
+
             $invite->status = 'ACCEPTED';
             $invite->save();
 
@@ -256,6 +356,14 @@ class Registrations extends Controller
                                          ->update([
                                             'teamName' => $teamName
                                             ]);
+
+            //Delete the invites a person has gotten
+            Notification::where('userId','=',$toRegistrationId)
+                        ->where('message_type','=','INVITE')
+                        ->delete();
+
+            Invite::where('toRegistrationId','=',$toRegistrationId)
+                  ->delete();
 
             $response = JSONResponse::response(200, 'Invite Confirmed');
             return $response;
