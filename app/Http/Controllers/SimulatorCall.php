@@ -89,7 +89,7 @@ class SimulatorCall extends Controller
 
         $ext = $file->getClientOriginalExtension();
         if($file->isValid()) {
-            $filename = substr(md5(rand()), 0, 8)."_".$team_name.".".$ext;
+            $filename = substr(md5(rand()), 0, 8)."_".$team_id.".".$ext;
             str_replace(" ", "_", $filename);
             $file = $request->file('file');
             $file->move(storage_path('submissions'), $filename);
