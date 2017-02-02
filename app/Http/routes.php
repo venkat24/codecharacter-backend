@@ -15,7 +15,11 @@ Route::get('/', function () {
     return view('home');
 });
 Route::get('/teams', function () {
-    return view('teams');
+    if(Session::get('user_email')) {
+        return view('teams');
+    } else {
+        return view('login');
+    }
 });
 Route::get('/login', function () {
     if(Session::get('user_email')) {
