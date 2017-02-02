@@ -23,11 +23,16 @@
 // 	});	
 // }
 
+$(document).ready(function () {
+    teamData.lockTeamName();
+});
+
 Vue.component('team-member', {
 	props: ['member'],
 	template: '<div> <br /><input class="memberName" :value="member.name" placeholder="name" disabled /> <input class="memberEmail" :value="member.email" placeholder="email" /> <span class="buttonContainer"><button class="inviteButton" onclick="invite(this)">Send Invite</button></span> </div>'
 });
 
+console.log("TEAMNAME : " + USER_DATA.teamName);
 var teamData = new Vue({
 	el: "#team-info",
 	data: {
@@ -40,8 +45,15 @@ var teamData = new Vue({
 		]
 	},
 	methods: {
+        lockTeamName: function() {
+            console.log("Executing Lock..");
+            if(this.newTeamName !== "") {
+                document.getElementById('team-name').disabled = true;
+                console.log("Actual Locking");
+            }
+        },
 		create: function() {
-			var teamName = document.getElementById('team-name').value;
+			var teamName = this.newTeamName;
 			var sentData = { teamName: teamName, leaderEmail: USER_DATA.userEmail };
 			var request = $.ajax({
 				url: SITE_BASE_URL + '/api/create_team',
@@ -73,7 +85,9 @@ var teamData = new Vue({
 						document.getElementsByClassName('inviteButton')[0].style.visibility = 'hidden';
 						document.getElementsByClassName('memberEmail')[0].disabled = true;
 					}, 10);
-				}
+                } else if (data.status_code == 400) {
+                    alert(data.message);
+                }
 			});
 			request.fail(function(jqXHR, textStatus, err) {
 				return console.log(err.toString());
@@ -111,9 +125,11 @@ function invite(button) {
 			email[email.length - 1].disabled = true;
 			names = document.getElementsByClassName('memberName');
 			names[names.length-1].value = data.message;
-			buttons[buttons.length-1].innerHTML = " Invite Sent"
+			buttons[buttons.length-1].innerHTML = " Invite Sent";
 			// button.disabled = true;
-		}
+		} else if (data.status_code == 400) {
+                    alert(data.message);
+        }
 	});
 	request.fail(function(jqXHR, textStatus, err) {
 		return console.log(err.toString());
@@ -147,7 +163,7 @@ function invite(button) {
 			for (i = 0; i < data.message.length; i++)
 				teamData.teamMembers.push({name: data.message[i].name, email: data.message[i].emailId});
 
-			teamData.buttonText = 'Rename';
+			teamData.buttonText = 'Delete';
 			teamData.teamMemberSeen = true;
 			teamData.buttonSeen = true;
 			setTimeout(function() {
