@@ -17,6 +17,8 @@ class CreateNotificationsTable extends Migration
             $table->integer('userId')->unsigned();
             $table->string('title',100);
             $table->text('message');
+            $table->enum('messageType',['SUBMISSION','INVITE','OTHER']);
+            $table->text('teamName')->nullable();
             $table->timestamps();
         });
     }
