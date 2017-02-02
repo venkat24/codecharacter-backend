@@ -28,14 +28,15 @@ class Notifications extends Controller
      * @param title
      * @param message
      */
-    public static function sendNotification($userId, $title, $message) {
+    public static function sendNotification($userId, $title, $message, $message_type, $teamName) {
         $insert_response = Notification::insert([
-            'title' => $title,
-            'userId' => $userId,
-            'message' => $message
+            'title'        => $title,
+            'userId'       => $userId,
+            'message'      => $message,
+            'messageType'  => $message_type,
+            'teamName'     => $teamName,
         ]);
     }
-    
     /**
      * Display all the notifications a user has received
      * This includes team and subission notifications
