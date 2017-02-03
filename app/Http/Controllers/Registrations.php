@@ -12,7 +12,9 @@ use Sangria\JSONResponse;
 
 use App\Http\Controllers\Notifications;
 use App\Registration;
-use App\Submission;
+use App\Notification;
+use App\Leaderboard;
+use App\Submissions;
 use App\Invite;
 use App\Team;
 
@@ -102,25 +104,86 @@ class Registrations extends Controller
                                 'teamName' => '',
                             ]);
 
-                Invites::where('fromTeamId','=',$teamInfo->id)
+                Invite::where('fromTeamId','=',$teamInfo->id)
                        ->delete();
 
-                Notifications::where('team_name','=',$teamName)
+                Notification::where('teamName','=',$teamName)
                              ->delete();
 
-                Submission::where('teamId','=',$teamInfo->id)
+                Submissions::where('teamId','=',$teamInfo->id)
                           ->delete();
 
                 Leaderboard::where('teamId','=',$teamInfo->id)
                           ->delete();
 
-                Team::where('id','=',$teamId)
+                Team::where('id','=',$teamInfo->id)
                     ->delete();
 
                 return JSONResponse::response(200,"Team Deleted");
             } else {
                 return JSONResponse::response(400,"Team Not Found");
             }
+        } catch (Exception $e) {
+            Log::error($e->getMessage()." ".$e->getLine());
+            return JSONResponse::response(500, $e->getMessage());
+        }
+    }
+
+    /**
+     * Change Leader
+     * Makes the current leader a normal member and
+     *
+     * Make someone else the leader of the team
+     * some other member the leader of the team
+     *
+     * @param teamName
+     * @return \Illuminate\Http\Response
+     */
+    public function changeLeader(Request $request) {
+        try {
+            $validator = Validator::make($request->all(), [
+                'teamName'           => 'required|string',
+                'currentLeaderEmail' => 'required|string',
+                'newLeaderEmail'     => 'required|string',
+            ]);
+            if($validator->fails()) {
+                $message = $validator->errors()->all();
+                return JSONResponse::response(400, $message);
+            }
+
+            $teamName = $request->input('teamName');
+
+            $currentLeaderEmail = $request->input('currentLeaderEmail');
+            $newLeaderEmail = $request->input('newLeaderEmail');
+
+            $leaderCheck = Team::where('leaderRegistrationId','=',$currentLeaderEmail)
+                               ->first();
+
+            $memberCheck = Registration::where('teamName','=',$teamName)
+                                       ->where('id','=',$newLeaderEmail)
+                                       ->first();
+
+            if(!$leaderCheck || !$memberCheck) {
+                return JSONResponse::response(400,'Given leaders are not members of the team');
+            }
+            
+            $currentLeaderId = Registration::where('id','=',$currentLeaderEmail)
+                                           ->first();
+
+            $newLeaderId = Registration::where('id','=',$newLeaderEmail)
+                                           ->first();
+
+            if(!$currentLeaderId || !$newLeaderId) {
+                return JSONResponse::response('Invalid Leader or New Leader');
+            }
+
+            Team::where('leaderRegistrationId','=',$currentLeaderEmail)
+                ->update([
+                    'leaderRegistrationId' => $newLeaderEmail,
+                ]);
+
+            return JSONResponse::response(200,"Leader Changed");
+
         } catch (Exception $e) {
             Log::error($e->getMessage()." ".$e->getLine());
             return JSONResponse::response(500, $e->getMessage());
@@ -163,6 +226,7 @@ class Registrations extends Controller
         }
     }
     /**
+     * Get Team Members
      * Function to return the team members in a team, given the team name
      *
      * @param teamName
@@ -256,6 +320,12 @@ class Registrations extends Controller
             $teamName = $request->input('teamName');
             $email    = $request->input('email');
 
+            $memberExistsCheck = Registration::where('emailId','=',$email)
+                                             ->first();
+
+            if(empty($memberExistsCheck)) {
+                return JSONResponse::response(400, "Invalid Email");
+            }
 
             $fromTeamId = Team::where('teamName','=',$teamName)
                               ->pluck('id');
@@ -263,8 +333,8 @@ class Registrations extends Controller
             $toRegistrationId = Registration::where('emailId','=',$email)
                                              ->where('teamName', '=', '')
                                              ->pluck('id');
-            if(!$toRegistrationId)
-            {
+
+            if(empty($toRegistrationId)) {
                 return JSONResponse::response(400, "Member of a team");
             }
 
@@ -288,7 +358,7 @@ class Registrations extends Controller
               </button>
             ";
             $message_type = "INVITE";
-            Notifications::sendNotification($toRegistrationId,$title,$message,$message_type);
+            Notifications::sendNotification($toRegistrationId,$title,$message,$message_type,$teamName);
             $participantName = Registration::where('emailId','=',$email)
                                            ->pluck('name');
 
@@ -339,7 +409,7 @@ class Registrations extends Controller
                                              ->pluck('id');
 
             if(!$toRegistrationId) {
-                return JSONResponse::response(400, "Already a member");
+                return JSONResponse::response(400, "Already part of a team");
             }
 
             // Match aginst the last invite that was sent to this user
@@ -348,6 +418,9 @@ class Registrations extends Controller
                                ->where('toRegistrationId','=',$toRegistrationId)
                                ->orderBy('id','desc')
                                ->first();
+            if(!$invite) {
+                return JSONResponse::response(400,'Your invitation was cancelled');
+            }
 
             $invite->status = 'ACCEPTED';
             $invite->save();
@@ -359,7 +432,7 @@ class Registrations extends Controller
 
             //Delete the invites a person has gotten
             Notification::where('userId','=',$toRegistrationId)
-                        ->where('message_type','=','INVITE')
+                        ->where('messageType','=','INVITE')
                         ->delete();
 
             Invite::where('toRegistrationId','=',$toRegistrationId)
