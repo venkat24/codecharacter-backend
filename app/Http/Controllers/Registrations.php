@@ -166,7 +166,7 @@ class Registrations extends Controller
             if(!$leaderCheck || !$memberCheck) {
                 return JSONResponse::response(400,'Given leaders are not members of the team');
             }
-            
+
             $currentLeaderId = Registration::where('id','=',$currentLeaderEmail)
                                            ->first();
 
@@ -259,7 +259,7 @@ class Registrations extends Controller
                                 ->get(['registrations.name','registrations.emailId','registrations.id'])
                                 ->first();
             $teamLeader["status"] = "LEADER";
-            array_push($teamMembers, $teamLeader);
+            array_unshift($teamMembers, $teamLeader);
             return JSONResponse::response(200, $teamMembers);
     }
 
@@ -404,18 +404,21 @@ class Registrations extends Controller
             $leaderEmail = Registration::where('id','=',$fromTeam->id)
                                        ->first();
 
-            $toRegistrationId = Registration::where('emailId','=',$userEmail)
-                                             ->where('teamName', '=', '')
-                                             ->pluck('id');
+            $toRegistration = Registration::where('emailId','=',$userEmail)
+                                             ->first();
 
-            if(!$toRegistrationId) {
+            if(empty($toRegistration)) {
+                return JSONResponse::response(400, "User Not Found");
+            }
+
+            if(!$toRegistration->teamName == "") {
                 return JSONResponse::response(400, "Already part of a team");
             }
 
             // Match aginst the last invite that was sent to this user
             // from the particular teamName
             $invite = Invite::where('fromTeamId','=',$fromTeam->id)
-                               ->where('toRegistrationId','=',$toRegistrationId)
+                               ->where('toRegistrationId','=',$toRegistration->id)
                                ->orderBy('id','desc')
                                ->first();
             if(!$invite) {
@@ -431,11 +434,11 @@ class Registrations extends Controller
                                             ]);
 
             //Delete the invites a person has gotten
-            Notification::where('userId','=',$toRegistrationId)
+            Notification::where('userId','=',$toRegistration->id)
                         ->where('messageType','=','INVITE')
                         ->delete();
 
-            Invite::where('toRegistrationId','=',$toRegistrationId)
+            Invite::where('toRegistrationId','=',$toRegistration->id)
                   ->delete();
 
             $response = JSONResponse::response(200, 'Invite Confirmed');
