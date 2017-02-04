@@ -16,37 +16,47 @@ var teamData = new Vue({
 		create: function() {
 			var teamName = document.getElementById('team-name').value;
 			var sentData = { teamName: teamName, leaderEmail: USER_DATA.userEmail };
-			var request = $.ajax({
-				url: SITE_BASE_URL + '/api/create_team',
-				type: 'POST',
-				data: sentData
-			});
-
-			// else
-			// 	var request = $.ajax({
-			// 		url: SITE_BASE_URL + '/api/rename_team',
-			// 		type: 'POST',
-			// 		data: {
-			// 		  teamName: teamName
-			// 		},
-			// 	});
-
-			request.done(function(data) {
-				if (data.status_code == 200) {
-					teamData.buttonText = 'Delete';
-					teamData.teamMemberSeen = true;
-					teamData.buttonSeen = true;
-					teamData.teamMembers.push({name: USER_DATA.userName, email: USER_DATA.userEmail});
-					USER_DATA.teamName = teamName;
-					setTimeout(function() {
-						document.getElementsByClassName('inviteButton')[0].style.visibility = 'hidden';
-						document.getElementsByClassName('memberEmail')[0].disabled = true;
-					}, 30);
-				}
-			});
-			request.fail(function(jqXHR, textStatus, err) {
-				return console.log(err.toString());
-			});
+			if (!USER_DATA.teamName) {
+				var request = $.ajax({
+					url: SITE_BASE_URL + '/api/create_team',
+					type: 'POST',
+					data: sentData
+				});
+				request.done(function(data) {
+					if (data.status_code == 200) {
+						// teamData.buttonText = 'Delete';
+						// teamData.teamMemberSeen = true;
+						// teamData.buttonSeen = true;
+						// teamData.teamMembers.push({name: USER_DATA.userName, email: USER_DATA.userEmail});
+						// USER_DATA.teamName = teamName;
+						// setTimeout(function() {
+						// 	document.getElementsByClassName('inviteButton')[0].style.visibility = 'hidden';
+						// 	document.getElementsByClassName('memberEmail')[0].disabled = true;
+						// }, 30);
+						location.reload();
+					}
+				});
+				request.fail(function(jqXHR, textStatus, err) {
+					return console.log(err.toString());
+				});
+			}
+			else {
+				var request = $.ajax({
+					url: SITE_BASE_URL + '/api/delete_team',
+					type: 'POST',
+					data: {
+					  teamName: USER_DATA.teamName
+					},
+				});
+				request.done(function(data) {
+					console.log(data);
+					if (data.status_code == 200)
+						location.reload();
+				});
+				request.fail(function(jqXHR, textStatus, err) {
+					return console.log(err.toString());
+				});
+			}
 		},
 		add: function() {
 			this.buttonSeen = false;
@@ -81,7 +91,7 @@ function invite(button) {
 			email[email.length - 1].disabled = true;
 			names = document.getElementsByClassName('memberName');
 			names[names.length-1].value = data.message;
-			buttons[buttons.length-1].innerHTML = "<button class='deleteButton' onclick='delete(this)'>Cancel Invite</button>"
+			buttons[buttons.length-1].innerHTML = "<button class='deleteButton' onclick='cancel(this)'>Cancel Invite</button>";
 			// button.disabled = true;
 		}
 	});
@@ -90,6 +100,128 @@ function invite(button) {
 	});
 }
 
+function leave() {
+	var request = $.ajax({
+		url: SITE_BASE_URL + '/api/leave_team',
+		type: 'POST',
+		data: {
+		  teamName: USER_DATA.teamName,
+		  email: USER_DATA.userEmail
+		},
+	});
+
+	request.done(function(data) {
+		console.log(data);
+		if (data.status_code == 200) {
+			location.reload();
+		}
+	});
+	request.fail(function(jqXHR, textStatus, err) {
+		return console.log(err.toString());
+	});
+}
+
+function remove(button) {
+	email = button.parentElement.parentElement.childNodes[3].value;
+
+	// var email = document.getElementsByClassName('memberEmail')[id];
+	// var container = document.getElementsByClassName('buttonContainer')[id];
+	console.log(email);
+
+	var request = $.ajax({
+		url: SITE_BASE_URL + '/api/remove_member',
+		type: method,
+		data: {
+		  teamName: USER_DATA.teamName,
+		  email: email
+		},
+	});
+
+	request.done(function(data) {
+		console.log(data);
+		if (data.status_code == 200) {
+			// teamData.teamMembers.splice(count, 1);
+			location.reload();
+		}
+	});
+	request.fail(function(jqXHR, textStatus, err) {
+		return console.log(err.toString());
+	});
+}
+
+function leader(id) {
+	var email = document.getElementsByClassName('memberEmail')[id];
+	// var button = document.getElementsByClassName('removeButton')[id];
+	console.log(email);
+
+	var request = $.ajax({
+		url: SITE_BASE_URL + '/api/make_leader',
+		type: method,
+		data: {
+		  teamName: USER_DATA.teamName,
+		  email: email
+		},
+	});
+
+	request.done(function(data) {
+		console.log(data);
+		if (data.status_code == 200) {
+			location.reload();
+		}
+	});
+	request.fail(function(jqXHR, textStatus, err) {
+		return console.log(err.toString());
+	});
+}
+
+function cancel(button) {
+	// var buttons = document.getElementsByClassName('deleteButton');
+	// var emails = document.getElementsByClassName('memberEmail');
+	// var names = document.getElementsByClassName('memberName');
+	// var number, email, count = 0;
+
+	// for (var i = 0; i < buttons.length; i++) {
+	// 	if (button === buttons[i]) {
+	// 		number = i;
+	// 		console.log(i);
+	// 		break;
+	// 	}
+	// }
+
+	// for (var i = 0; i < names.length; i++) {
+	// 	if (names[i] == USER_DATA.userName)
+	// 		continue;
+	// 	else if(count === number)
+	// 		email = emails[count];
+	// 	else count++;
+	// }
+
+	email = button.parentElement.parentElement.childNodes[3].value;
+	console.log(email);
+	// console.log(count);
+
+	// var request = $.ajax({
+	// 	url: SITE_BASE_URL + '/api/send_invite',
+	// 	type: method,
+	// 	data: {
+	// 	  teamName: USER_DATA.teamName,
+	// 	  email: email
+	// 	},
+	// });
+
+	// request.done(function(data) {
+	// 	console.log(data);
+	// 	if (data.status_code == 200) {
+		// teamData.teamMembers.splice(count, 1);
+		location.reload();
+	// 	}
+	// });
+	// request.fail(function(jqXHR, textStatus, err) {
+	// 	return console.log(err.toString());
+	// });
+}
+
+
 (function() {
 	var teamName = USER_DATA.teamName;
 	var request = $.ajax({
@@ -97,7 +229,7 @@ function invite(button) {
 		type: 'GET',
 		data: {
 		  teamName: teamName
-		},
+		}
 	});
 	// if (USER_DATA.teamName) {
 	// 	teamData.teamMembers.push({name: USER_DATA.userName, email: USER_DATA.userEmail});
@@ -113,7 +245,6 @@ function invite(button) {
 	request.done(function(data) {
 		console.log(data);
 		if (data.status_code == 200) {
-			console.log("addding");
 			for (i = 0; i < data.message.length; i++)
 				teamData.teamMembers.push({name: data.message[i].name, email: data.message[i].emailId});
 
@@ -124,10 +255,10 @@ function invite(button) {
 				for (var i = 0; i < data.message.length; i++) {
 					document.getElementsByClassName('memberEmail')[i].disabled = true;
 					if (data.message[i].status == 'LEADER')
-						document.getElementsByClassName('buttonContainer')[i].innerHTML = "<button class='leaveButton' onclick=''>Leave</button>";
+						document.getElementsByClassName('buttonContainer')[i].innerHTML = "<button class='leaveButton' onclick='leave()'>Leave</button>";
 					else if (data.message[i].status == 'ACCEPTED')
-						document.getElementsByClassName('buttonContainer')[i].innerHTML = "<button class='removeButton' onclick=''>Remove Member</button>";
-					else document.getElementsByClassName('buttonContainer')[i].innerHTML = "<button class='deleteButton' onclick=''>Cancel Invite</button>";
+						document.getElementsByClassName('buttonContainer')[i].innerHTML = "<button class='removeButton' onclick='remove(this)'>Remove Member</button> <button class='makeLeader' onclick='leader()'>Make Leader</button>";
+					else document.getElementsByClassName('buttonContainer')[i].innerHTML = "<button class='deleteButton' onclick='cancel(this)'>Cancel Invite</button>";
 				}
 			}, 30);
 		}
