@@ -55,11 +55,10 @@ class Notifications extends Controller
                 return Redirect::away($loginUrl);
             } else {
                 $emailId = Session::get('user_email');
-                $userId = Registration::where('emailId','=',$emailId)
-                                      ->first()
-                                      ->pluck('id');
+                $user = Registration::where('emailId','=',$emailId)
+                                    ->first();
 
-                $notifications = Notification::where('userId','=',$userId)
+                $notifications = Notification::where('userId','=',$user->id)
                                              ->get();
 
                 return view('notifications',[

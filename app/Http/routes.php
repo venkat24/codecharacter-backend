@@ -58,6 +58,9 @@ Route::group(['middleware' => 'setResponseHeaders'], function() {
     Route::get('/api/check_job_status', 'SimulatorCall@checkJobStatus');
     Route::get('/api/check_if_team_exists', 'Registrations@checkIfTeamExists');
     Route::post('/api/register_user','Registrations@newRegistration');
+    Route::post('/api/delete_member','Registrations@deleteMember');
+    Route::post('/api/delete_team','Registrations@deleteTeam');
+    Route::post('/api/change_leader','Registrations@changeLeader');
     Route::post('/api/login','Auth@login');
 });
 Route::group(['middleware' => ['checkSession','setResponseHeaders']], function() {
