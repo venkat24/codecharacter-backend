@@ -33,7 +33,7 @@
     <div class="row">
       <div id="team-info" class="large-12 columns">
         <input type="text" placeholder="Team Name" v-model="newTeamName" id="team-name"/>
-        <button class="button expanded" v-on:click="create">@{{ buttonText }} Team</button> <br />
+        <button class="button expanded" v-on:click="create" id="create-button">@{{ buttonText }} Team</button> <br />
         <team-member v-if="teamMemberSeen" v-for="item in teamMembers" v-bind:member="item"></team-member> <br />
         <button class="button small" v-if="buttonSeen" v-on:click="add">Add Member</button>
       </div>
