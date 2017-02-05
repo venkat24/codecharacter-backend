@@ -1,3 +1,8 @@
+function enter(event) {
+	if (event.keyCode == 13)
+		login();
+}
+
 function login() {
 	var route = SITE_BASE_URL + '/api/login';
 	var method = 'POST';
