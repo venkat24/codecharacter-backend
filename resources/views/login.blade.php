@@ -10,7 +10,7 @@
     <div class="four columns">
   </div>
   <div class="four columns">
-    <div class="row column log-in-form">
+    <div class="row column log-in-form" onkeydown="enter(event)">
       <h4 class="text-center">Log in with your Pragyan account</h4>
       <div class="text-center" style="color: #FF9999">You MUST have a Pragyan account before registering for Code Character</div>
       <label>Email
