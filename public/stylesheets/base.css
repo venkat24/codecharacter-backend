@@ -1,26 +1,109 @@
 @import 'https://fonts.googleapis.com/css?family=Roboto';
 html,
 body {
-  font-family: 'Roboto', sans serif;
+    font-family: 'Roboto', sans serif;
+    background-color: #151515;
+    color: #DDDDDD;
 }
 
 .container {
-  height: 100%;
-  width: 100%;
-  justify-content: center;
-  align-items: center;
-  display: flex;
+    height: 100%;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    display: flex;
 }
+
 .text {
-  font-weight: 100;
-  font-size: 28px;
-  color: #fafafa;
+    font-weight: 100;
+    font-size: 28px;
 }
-.dud {
-  color: #757575;
-}
+
 .top-bar {
-  width: 100%;
-  position: fixed;
-  z-index: 1000;
+    width: 100%;
+    position: fixed;
+    z-index: 1000;
+}
+
+#event-tag {
+    font-weight: bold;
+}
+
+.top-tag {
+    margin: 15px;
+    color: white;
+    padding: 20px;
+    /*background-color: #13505B;*/
+    border-radius: 100px;
+    border: 3px solid white;
+}
+
+nav > ul > li > a         {color:#FFFFFF;}
+nav > ul > li > a:visited {color:#FFFFFF;}
+nav > ul > li > a:hover   {color:#FFFFFF;}
+nav > ul > li > a:active  {color:#FFFFFF;} 
+
+nav {
+    padding-top: 20px;
+    padding-bottom: 20px;
+    color: white;
+    text-align: center;
+    transition: all .3s ease-in-out;
+}
+nav > ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: inline-block;
+    border: 3px solid white;
+    /*background: #2BA6CB;*/
+    border-radius: 2.5px;
+    /*box-shadow: 0px 0px 20px #2BA6CB;*/
+}
+nav > ul > li:after {
+    content: "";
+    width: 0;
+    height: 2px;
+    position: absolute;
+    background-color: white;
+    top: 75%;
+    left: 50%;
+    transition: all 0.3s ease-in-out;
+}
+nav > ul > li:hover:after {
+    left: 15px;
+    width: 70px;
+}
+nav > ul > li:hover {
+    /*transform: scale(0.95);*/
+    top: 1px;
+}
+nav > ul > li {
+    float: left;
+    width: 100px;
+    height: 50px;
+    line-height: 50px;
+    position: relative;
+    text-transform: uppercase;
+    font-size: 15px;
+    color: #ffffff;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    font-family: "Roboto", sans-serif;
+}
+
+nav > ul > li:not(:first-child):before {
+    /*border-left: 2px solid white;*/
+    width: 2px;
+    background-color: white;
+    content: "";
+    height: 25px;
+    position: absolute;
+    left: 0;
+    transform: translate(-50%,-50%);
+    top: 50%;
+}
+nav > ul > li:hover:not(:first-child):before {
+    /*transform: scale(1.05) translate(-50%,-50%);*/
+    top: calc(50% - 1px);
 }
