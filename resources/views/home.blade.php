@@ -11,7 +11,7 @@
     
   <div class="row">
     <div class="twelve columns">
-      <img src="http://placehold.it/1000x400&text=[img]" />
+      <img src="http://placehold.it/1000x400/393939?text=Main Banner" />
       <hr />
     </div>
   </div>
@@ -20,7 +20,7 @@
   <div class="row">
     <div class="twelve columns">
 			<div class="container">
-				<h1 class="text changing-heading" style="color:#444444" ></h1>
+				<h1 class="text changing-heading" style="color:#00FF72" ></h1>
 			</div>
     	<hr />
 		</div>
@@ -29,7 +29,7 @@
   
   <div class="row">
     <div class="four columns">
-      <img src="http://placehold.it/400x300&text=[img]" />
+      <img src="http://placehold.it/400x300/393939" />
     </div>
     <div class="eight columns">
       <h4>This is a content section.</h4>
@@ -57,7 +57,7 @@
           
     </div>
     <div class="four columns">
-      <img src="http://placehold.it/400x300&text=[img]" />
+      <img src="http://placehold.it/400x300/393939" />
     </div>
   </div>
 

@@ -28,43 +28,35 @@
 </head>
 @yield('pre-main')
 <body>
-  
-  <!-- Header and Nav -->
-  
-  <div class="row">
-    @if ( Session::get('user_fullname') != "" )
-    <div style="float: right">
-      Welcome {{Session::get('user_fullname')}}  
-    </div>
-    @endif
-    @if ( Session::get('team_name') != "" )
-    <br />
-    <div style="float: right">
-      You're part of team {{Session::get('team_name')}}  
-    </div>
-    @endif
-    <div class="three columns">
-      <h1>
-      <a href="/">
-        <img src="http://placehold.it/400x100&text=Logo" />
-      </a>
-      </h1>
-    </div>
-    <div class="nine columns">
-      <ul class="nav-bar right">
+ <header>
+	<nav>
+	  <ul>
+        <li><a href="/">Home</a></li>
         <li><a href="/rules">Rules</a></li>
-        <li><a href="/leaderboard">Leaderboard</a></li>
-        <li><a href="/docs">Documentation</a></li>
+        <li><a href="/leaderboard">Scores</a></li>
+        <li><a href="/docs">Docs</a></li>
         @if (Session::get('user_email'))
-        <li><a href="/notifications">Notifications</a></li>
+        <li><a href="/notifications">Alerts</a></li>
         <li><a href="/submit">Submit</a></li>
-        <li><a href="/teams">Your Team</a></li>
+        <li><a href="/teams">Team</a></li>
         <li><a href="#" onclick="logout()">Logout</a></li>
         @else
         <li><a href="/login">Login</a></li>
         @endif
-      </ul>
+	  </ul>
+	</nav>
+	</header> 
+  <div class="row">
+    @if ( Session::get('user_fullname') != "" )
+    <div class="top-tag" id="event-tag" style="float: left">
+      Welcome {{Session::get('user_fullname')}}  
     </div>
+    <div class="top-tag" style="float: right">
+    @endif
+    @if ( Session::get('team_name') != "" )
+      Team {{Session::get('team_name')}}  
+    </div>
+    @endif
   </div>
 
   @yield('main')
