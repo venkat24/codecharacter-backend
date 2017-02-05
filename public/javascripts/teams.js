@@ -1,6 +1,14 @@
+var inviteCount = 0,
+	memberCount = 0;
+
 Vue.component('team-member', {
 	props: ['member'],
-	template: '<div> <br /><input class="memberName" :value="member.name" placeholder="name" disabled /> <input class="memberEmail" :value="member.email" placeholder="email" /> <span class="buttonContainer"><button class="inviteButton" onclick="invite(this)">Send Invite</button></span> </div>'
+	template: '<div> <br /><input class="memberName" :value="member.name" placeholder="name" disabled /> <input class="memberEmail" :value="member.email" placeholder="email" :disabled="member.status == \'INVITE\'? false: true"/> ' +
+		'<button v-if="member.status==\'INVITE\'" class="inviteButton" onclick="invite()">Send Invite</button> ' +
+		'<button v-if="member.status==\'SENT\'" class="deleteButton" onclick="cancel(this.id)" :id="member.invNumber">Cancel Invite</button> ' +
+		'<button v-if="member.status==\'ACCEPTED\'" class="removeButton" onclick="remove(this.id)" :id="member.memNumber">Remove Member</button> ' +
+		'<button v-if="member.status==\'ACCEPTED\'" class="makeLeader" onclick="leader(this)">Make Leader</button> ' +
+		'<button v-if="member.status==\'LEADER\'" class="leaveButton" onclick="leave()">Leave Team</button></div>'
 });
 
 var teamData = new Vue({
@@ -15,45 +23,47 @@ var teamData = new Vue({
 	methods: {
 		create: function() {
 			var teamName = document.getElementById('team-name').value;
-			var sentData = { teamName: teamName, leaderEmail: USER_DATA.userEmail };
 			if (!USER_DATA.teamName) {
-				var request = $.ajax({
+				$.ajax({
 					url: SITE_BASE_URL + '/api/create_team',
 					type: 'POST',
-					data: sentData
-				});
-				request.done(function(data) {
-					if (data.status_code == 200) {
-						// teamData.buttonText = 'Delete';
-						// teamData.teamMemberSeen = true;
-						// teamData.buttonSeen = true;
-						// teamData.teamMembers.push({name: USER_DATA.userName, email: USER_DATA.userEmail});
-						// USER_DATA.teamName = teamName;
-						// setTimeout(function() {
-						// 	document.getElementsByClassName('inviteButton')[0].style.visibility = 'hidden';
-						// 	document.getElementsByClassName('memberEmail')[0].disabled = true;
-						// }, 30);
-						location.reload();
+					data: {
+						teamName: teamName,
+						leaderEmail: USER_DATA.userEmail
 					}
-				});
-				request.fail(function(jqXHR, textStatus, err) {
+				})
+				.done(function(data) {
+					if (data.status_code == 200) {
+						teamData.teamMembers.push({
+							name: USER_DATA.userName,
+							email: USER_DATA.userEmail,
+							status: 'LEADER'
+						});
+						teamData.buttonText = 'Delete';
+						teamData.teamMemberSeen = true;
+						teamData.buttonSeen = true;
+						document.getElementById('create-button').className += ' alert';
+					} else alert(data.message);
+				})
+				.fail(function(jqXHR, textStatus, err) {
 					return console.log(err.toString());
 				});
 			}
 			else {
-				var request = $.ajax({
+				$.ajax({
 					url: SITE_BASE_URL + '/api/delete_team',
 					type: 'POST',
 					data: {
 					  teamName: USER_DATA.teamName
 					},
-				});
-				request.done(function(data) {
-					console.log(data);
+				})
+				.done(function(data) {
+					// ADD ALERT CHECKS
 					if (data.status_code == 200)
 						location.reload();
-				});
-				request.fail(function(jqXHR, textStatus, err) {
+					else alert(data.message);
+				})
+				.fail(function(jqXHR, textStatus, err) {
 					return console.log(err.toString());
 				});
 			}
@@ -61,21 +71,19 @@ var teamData = new Vue({
 		add: function() {
 			this.buttonSeen = false;
 			if (this.teamMembers.length < 3)
-				this.teamMembers.push({});
+				this.teamMembers.push({status: 'INVITE'});
 		}
 	}
 });
 
-function invite(button) {
+function invite() {
 	var teamName = document.getElementById('team-name').value;
 	var emails = document.getElementsByClassName('memberEmail');
-	var buttons = document.getElementsByClassName('buttonContainer');
 	var email = emails[emails.length-1].value;
-	var method = 'POST';
 
 	var request = $.ajax({
 		url: SITE_BASE_URL + '/api/send_invite',
-		type: method,
+		type: 'POST',
 		data: {
 		  teamName: teamName,
 		  email: email
@@ -83,17 +91,18 @@ function invite(button) {
 	});
 
 	request.done(function(data) {
-		console.log(data);
 		if (data.status_code == 200) {
 			if (teamData.teamMembers.length < 3)
 				teamData.buttonSeen = true;
-			email = document.getElementsByClassName('memberEmail');
-			email[email.length - 1].disabled = true;
-			names = document.getElementsByClassName('memberName');
-			names[names.length-1].value = data.message;
-			buttons[buttons.length-1].innerHTML = "<button class='deleteButton' onclick='cancel(this)'>Cancel Invite</button>";
-			// button.disabled = true;
-		}
+
+			teamData.teamMembers[teamData.teamMembers.length-1] = {
+				name: data.message,
+				email: emails[emails.length - 1].value,
+				status: 'SENT',
+				invNumber: inviteCount
+			}
+			inviteCount++;
+		} else alert(data.message);
 	});
 	request.fail(function(jqXHR, textStatus, err) {
 		return console.log(err.toString());
@@ -111,26 +120,30 @@ function leave() {
 	});
 
 	request.done(function(data) {
-		console.log(data);
-		if (data.status_code == 200) {
+		// ADD ALERT CHECKS
+		if (data.status_code == 200)
 			location.reload();
-		}
+		else alert(data.message);
 	});
 	request.fail(function(jqXHR, textStatus, err) {
 		return console.log(err.toString());
 	});
 }
 
-function remove(button) {
-	email = button.parentElement.parentElement.childNodes[3].value;
+function cancel(id) {
+	var count, email;
 
-	// var email = document.getElementsByClassName('memberEmail')[id];
-	// var container = document.getElementsByClassName('buttonContainer')[id];
-	console.log(email);
+	for (var i = 0; i < teamData.teamMembers.length; i++) {
+		if (teamData.teamMembers[i].invNumber == id) {
+			email = teamData.teamMembers[i].email;
+			count = i;
+			break;
+		}
+	}
 
 	var request = $.ajax({
-		url: SITE_BASE_URL + '/api/remove_member',
-		type: method,
+		url: SITE_BASE_URL + '/api/cancel_invite',
+		type: 'POST',
 		data: {
 		  teamName: USER_DATA.teamName,
 		  email: email
@@ -138,21 +151,53 @@ function remove(button) {
 	});
 
 	request.done(function(data) {
-		console.log(data);
 		if (data.status_code == 200) {
-			// teamData.teamMembers.splice(count, 1);
-			location.reload();
-		}
+			teamData.teamMembers.splice(count, 1);
+			if (teamData.teamMembers[teamData.teamMembers.length-1].status != 'INVITE') {
+				teamData.buttonSeen = true;
+			}
+		} else alert(data.message);
 	});
 	request.fail(function(jqXHR, textStatus, err) {
 		return console.log(err.toString());
 	});
 }
 
-function leader(id) {
-	var email = document.getElementsByClassName('memberEmail')[id];
-	// var button = document.getElementsByClassName('removeButton')[id];
-	console.log(email);
+function remove(id) {
+	var count, email;
+
+	for (var i = 0; i < teamData.teamMembers.length; i++) {
+		if (teamData.teamMembers[i].memNumber == id) {
+			email = teamData.teamMembers[i].email;
+			count = i;
+			break;
+		}
+	}
+
+	var request = $.ajax({
+		url: SITE_BASE_URL + '/api/remove_member',
+		type: 'POST',
+		data: {
+		  teamName: USER_DATA.teamName,
+		  email: email
+		},
+	});
+
+	request.done(function(data) {
+		if (data.status_code == 200) {
+			teamData.teamMembers.splice(count, 1);
+			if (teamData.teamMembers[teamData.teamMembers.length-1].status != 'INVITE') {
+				teamData.buttonSeen = true;
+			}
+		} else alert(data.message);
+	});
+	request.fail(function(jqXHR, textStatus, err) {
+		return console.log(err.toString());
+	});
+}
+
+function leader(button) {
+	var email = button.parentElement.childNodes[3].value;
 
 	var request = $.ajax({
 		url: SITE_BASE_URL + '/api/make_leader',
@@ -164,61 +209,14 @@ function leader(id) {
 	});
 
 	request.done(function(data) {
-		console.log(data);
+		// ADD ALERT CHECKS
 		if (data.status_code == 200) {
 			location.reload();
-		}
+		} else alert(data.message);
 	});
 	request.fail(function(jqXHR, textStatus, err) {
 		return console.log(err.toString());
 	});
-}
-
-function cancel(button) {
-	// var buttons = document.getElementsByClassName('deleteButton');
-	// var emails = document.getElementsByClassName('memberEmail');
-	// var names = document.getElementsByClassName('memberName');
-	// var number, email, count = 0;
-
-	// for (var i = 0; i < buttons.length; i++) {
-	// 	if (button === buttons[i]) {
-	// 		number = i;
-	// 		console.log(i);
-	// 		break;
-	// 	}
-	// }
-
-	// for (var i = 0; i < names.length; i++) {
-	// 	if (names[i] == USER_DATA.userName)
-	// 		continue;
-	// 	else if(count === number)
-	// 		email = emails[count];
-	// 	else count++;
-	// }
-
-	email = button.parentElement.parentElement.childNodes[3].value;
-	console.log(email);
-	// console.log(count);
-
-	// var request = $.ajax({
-	// 	url: SITE_BASE_URL + '/api/send_invite',
-	// 	type: method,
-	// 	data: {
-	// 	  teamName: USER_DATA.teamName,
-	// 	  email: email
-	// 	},
-	// });
-
-	// request.done(function(data) {
-	// 	console.log(data);
-	// 	if (data.status_code == 200) {
-		// teamData.teamMembers.splice(count, 1);
-		location.reload();
-	// 	}
-	// });
-	// request.fail(function(jqXHR, textStatus, err) {
-	// 	return console.log(err.toString());
-	// });
 }
 
 
@@ -231,36 +229,41 @@ function cancel(button) {
 		  teamName: teamName
 		}
 	});
-	// if (USER_DATA.teamName) {
-	// 	teamData.teamMembers.push({name: USER_DATA.userName, email: USER_DATA.userEmail});
-	// 	teamData.buttonText = 'Rename';
-	// 	teamData.teamMemberSeen = true;
-	// 	teamData.buttonSeen = true;
-	// 	setTimeout(function () {
-	// 		document.getElementsByClassName('buttonContainer')[0].innerHTML = '';
-	// 		document.getElementsByClassName('memberEmail')[0].disabled = true;
-	// 	});
-	// }
 
 	request.done(function(data) {
-		console.log(data);
 		if (data.status_code == 200) {
-			for (i = 0; i < data.message.length; i++)
-				teamData.teamMembers.push({name: data.message[i].name, email: data.message[i].emailId});
+			for (i = 0; i < data.message.length; i++) {
+				if (data.message[i].status == 'SENT') {
+					teamData.teamMembers.push({
+						name: data.message[i].name,
+						email: data.message[i].emailId,
+						status: data.message[i].status,
+						invNumber: inviteCount
+					});
+					inviteCount++;
+				} else if (data.message[i].status == 'ACCEPTED'){
+					teamData.teamMembers.push({
+						name: data.message[i].name,
+						email: data.message[i].emailId,
+						status: data.message[i].status,
+						memNumber: memberCount
+					});
+					memberCount++;
+				} else {
+					teamData.teamMembers.push({
+						name: data.message[i].name,
+						email: data.message[i].emailId,
+						status: data.message[i].status
+					});
+				}
+			}
 
 			teamData.buttonText = 'Delete';
 			teamData.teamMemberSeen = true;
-			teamData.buttonSeen = true;
-			setTimeout(function() {
-				for (var i = 0; i < data.message.length; i++) {
-					document.getElementsByClassName('memberEmail')[i].disabled = true;
-					if (data.message[i].status == 'LEADER')
-						document.getElementsByClassName('buttonContainer')[i].innerHTML = "<button class='leaveButton' onclick='leave()'>Leave</button>";
-					else if (data.message[i].status == 'ACCEPTED')
-						document.getElementsByClassName('buttonContainer')[i].innerHTML = "<button class='removeButton' onclick='remove(this)'>Remove Member</button> <button class='makeLeader' onclick='leader()'>Make Leader</button>";
-					else document.getElementsByClassName('buttonContainer')[i].innerHTML = "<button class='deleteButton' onclick='cancel(this)'>Cancel Invite</button>";
-				}
-			}, 30);
+			document.getElementById('create-button').className += ' alert';
+			if (teamData.teamMembers.length < 3)
+				teamData.buttonSeen = true;
+			else teamData.buttonSeen = false;
 		}
 	});
 	request.fail(function(jqXHR, textStatus, err) {

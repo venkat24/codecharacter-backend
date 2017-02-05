@@ -119,6 +119,9 @@ class Registrations extends Controller
                 Team::where('id','=',$teamInfo->id)
                     ->delete();
 
+                Session::put([
+                    "team_name" => ""
+                ]);
                 return JSONResponse::response(200,"Team Deleted");
             } else {
                 return JSONResponse::response(400,"Team Not Found");
