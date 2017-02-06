@@ -14,25 +14,14 @@ body {
     display: flex;
 }
 
-.text {
-    font-weight: 100;
-    font-size: 28px;
-}
-
-.top-bar {
-    width: 100%;
-    position: fixed;
-    z-index: 1000;
-}
-
 #event-tag {
     font-weight: bold;
 }
 
 .top-tag {
-    margin: 15px;
+    margin: 10px;
     color: white;
-    padding: 20px;
+    padding: 14px;
     /*background-color: #13505B;*/
     border-radius: 100px;
     border: 3px solid white;
@@ -45,7 +34,7 @@ nav > ul > li > a:active  {color:#FFFFFF;}
 
 nav {
     padding-top: 20px;
-    padding-bottom: 20px;
+    padding-bottom: 10px;
     color: white;
     text-align: center;
     transition: all .3s ease-in-out;
