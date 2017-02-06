@@ -51,9 +51,9 @@
     <div class="top-tag" id="event-tag" style="float: left">
       Welcome {{Session::get('user_fullname')}}  
     </div>
-    <div class="top-tag" style="float: right">
     @endif
     @if ( Session::get('team_name') != "" )
+    <div class="top-tag" style="float: right">
       Team {{Session::get('team_name')}}  
     </div>
     @endif
