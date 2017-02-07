@@ -1,0 +1,16 @@
+#!/bin/bash
+
+# Name for simulator container
+SIM_CONTAINER_NAME=codecharacterbackend_sim_1
+
+# Remove the existing containers
+docker rm -f `docker ps -aq`
+
+# Launch app, web, and db containers
+docker-compose up --build -d
+
+# Run the simulator container
+docker run -td -P \
+    --name $SIM_CONTAINER_NAME \
+    -v /home/venkat/bin/codecharacter-backend/simulator:/var/www/code-character/sim python
+
