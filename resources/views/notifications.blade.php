@@ -15,12 +15,14 @@
   </div>
   <div class="row">
       @foreach ($notifications as $notif)
+    <div class="one columns"></div>
     <div class="twelve columns callout-container primary">
       <div class="callout">
         <h5>{{$notif->title}}</h5>
         <p>{!! $notif->message !!}</p>
       </div>
     </div>
+    <div class="one columns"></div>
       @endforeach
   </div>
   <script type="text/javascript" src="{{asset('javascripts/notifications.js')}}"></script>
