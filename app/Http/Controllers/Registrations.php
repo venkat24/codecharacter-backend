@@ -239,6 +239,53 @@ class Registrations extends Controller
             return JSONResponse::response(500, $e->getMessage());
         }
     }
+
+    /**
+     * Leave Team
+     * Leave your own team.
+     * DOES NOT WORK FOR TEAM LEADER
+     * To delete the leader, use the deleteLeader function instead
+     *
+     * @param teamName
+     * @return \Illuminate\Http\Response
+     */
+    public function leaveTeam(Request $request) {
+        try {
+            $validator = Validator::make($request->all(), [
+                'teamName'  => 'required|string',
+                'userEmail' => 'required|string',
+            ]);
+            if($validator->fails()) {
+                $message = $validator->errors()->all();
+                return JSONResponse::response(400, $message);
+            }
+
+            $teamName = $request->input('teamName');
+            $userEmail = $request->input('userEmail');
+
+            $currentUser = Registration::where('emailId','=',$userEmail)
+                                       ->where('teamName','=',$teamName)
+                                       ->first();
+
+            if(empty($currentUser)) {
+                return JSONResponse::response(400,'Invalid User');
+            }
+
+            Registration::where('id','=',$currentUser->id)
+                         ->update([
+                            'teamName' => null
+                         ]);
+
+            Session::forget('team_name');
+
+            return JSONResponse::response(200,"Left from Team");
+
+        } catch (Exception $e) {
+            Log::error($e->getMessage()." ".$e->getLine());
+            return JSONResponse::response(500, $e->getMessage());
+        }
+    }
+
     /**
      * Get Team Members
      * Function to return the team members in a team, given the team name
