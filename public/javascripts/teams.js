@@ -3,12 +3,12 @@ var inviteCount = 0,
 
 Vue.component('team-member', {
 	props: ['member'],
-	template: '<div> <br /><input class="memberName" :value="member.name" placeholder="name" disabled /> <input class="memberEmail" :value="member.email" placeholder="email" :disabled="member.status == \'INVITE\'? false: true"/> ' +
-		'<button v-if="member.status==\'INVITE\'" class="inviteButton" onclick="invite()">Send Invite</button> ' +
-		'<button v-if="member.status==\'SENT\'" class="deleteButton" onclick="cancel(this.id)" :id="member.invNumber">Cancel Invite</button> ' +
-		'<button v-if="member.status==\'ACCEPTED\'" class="removeButton" onclick="remove(this.id)" :id="member.memNumber">Remove Member</button> ' +
-		'<button v-if="member.status==\'ACCEPTED\'" class="makeLeader" onclick="leader(this)">Make Leader</button> ' +
-		'<button v-if="member.status==\'LEADER\'" class="leaveButton" onclick="leave()">Leave Team</button></div>'
+	template: '<div> <br /><input class="memberName inputs" :value="member.name" placeholder="name" disabled /> <input class="memberEmail inputs" :value="member.email" placeholder="email" :disabled="member.status == \'INVITE\'? false: true"/> ' +
+		'<button v-if="member.status==\'INVITE\'" class="inviteButton button small" onclick="invite()">Send Invite</button> ' +
+		'<button v-if="member.status==\'SENT\'" class="deleteButton button small" onclick="cancel(this.id)" :id="member.invNumber">Cancel Invite</button> ' +
+		'<button v-if="member.status==\'ACCEPTED\'" class="removeButton button small" onclick="remove(this.id)" :id="member.memNumber">Remove Member</button> ' +
+		'<button v-if="member.status==\'ACCEPTED\'" class="makeLeader button small" onclick="leader(this)">Make Leader</button> ' +
+		'<button v-if="member.status==\'LEADER\'" class="leaveButton button small" onclick="leave()">Leave Team</button></div>'
 });
 
 var teamData = new Vue({
@@ -54,7 +54,7 @@ var teamData = new Vue({
 					url: SITE_BASE_URL + '/api/delete_team',
 					type: 'POST',
 					data: {
-					  teamName: USER_DATA.teamName
+						teamName: USER_DATA.teamName
 					},
 				})
 				.done(function(data) {
@@ -85,8 +85,8 @@ function invite() {
 		url: SITE_BASE_URL + '/api/send_invite',
 		type: 'POST',
 		data: {
-		  teamName: teamName,
-		  email: email
+			teamName: teamName,
+			email: email
 		},
 	});
 
@@ -100,7 +100,7 @@ function invite() {
 				email: emails[emails.length - 1].value,
 				status: 'SENT',
 				invNumber: inviteCount
-			}
+			};
 			inviteCount++;
 		} else alert(data.message);
 	});
@@ -114,8 +114,8 @@ function leave() {
 		url: SITE_BASE_URL + '/api/leave_team',
 		type: 'POST',
 		data: {
-		  teamName: USER_DATA.teamName,
-		  email: USER_DATA.userEmail
+			  teamName: USER_DATA.teamName,
+			  email: USER_DATA.userEmail
 		},
 	});
 
@@ -145,13 +145,14 @@ function cancel(id) {
 		url: SITE_BASE_URL + '/api/cancel_invite',
 		type: 'POST',
 		data: {
-		  teamName: USER_DATA.teamName,
-		  email: email
+			  teamName: USER_DATA.teamName,
+			  userEmail: email
 		},
 	});
 
 	request.done(function(data) {
 		if (data.status_code == 200) {
+			console.log('Invite Cancelled');
 			teamData.teamMembers.splice(count, 1);
 			if (teamData.teamMembers[teamData.teamMembers.length-1].status != 'INVITE') {
 				teamData.buttonSeen = true;
@@ -175,16 +176,17 @@ function remove(id) {
 	}
 
 	var request = $.ajax({
-		url: SITE_BASE_URL + '/api/remove_member',
+		url: SITE_BASE_URL + '/api/delete_member',
 		type: 'POST',
 		data: {
-		  teamName: USER_DATA.teamName,
-		  email: email
+			  teamName: USER_DATA.teamName,
+			  userEmail: email
 		},
 	});
 
 	request.done(function(data) {
 		if (data.status_code == 200) {
+			alert('Member was deleted');
 			teamData.teamMembers.splice(count, 1);
 			if (teamData.teamMembers[teamData.teamMembers.length-1].status != 'INVITE') {
 				teamData.buttonSeen = true;
@@ -200,16 +202,16 @@ function leader(button) {
 	var email = button.parentElement.childNodes[3].value;
 
 	var request = $.ajax({
-		url: SITE_BASE_URL + '/api/make_leader',
-		type: method,
+		url: SITE_BASE_URL + '/api/change_leader',
+		type: 'POST',
 		data: {
-		  teamName: USER_DATA.teamName,
-		  email: email
+			currentLeaderEmail: USER_DATA.userEmail,
+			teamName: USER_DATA.teamName,
+			newLeaderEmail: email,
 		},
 	});
 
 	request.done(function(data) {
-		// ADD ALERT CHECKS
 		if (data.status_code == 200) {
 			location.reload();
 		} else alert(data.message);
@@ -226,13 +228,14 @@ function leader(button) {
 		url: SITE_BASE_URL + '/api/get_team_members',
 		type: 'GET',
 		data: {
-		  teamName: teamName
+			teamName: teamName
 		}
 	});
 
 	request.done(function(data) {
 		if (data.status_code == 200) {
-			for (i = 0; i < data.message.length; i++) {
+			console.log(data);
+			for (i = 0; i < Object.keys(data.message).length; i++) {
 				if (data.message[i].status == 'SENT') {
 					teamData.teamMembers.push({
 						name: data.message[i].name,

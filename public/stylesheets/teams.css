@@ -1,0 +1,14 @@
+.memberElem {
+    display: inline-block;
+}
+.inputs {
+    height: 30px;
+    margin: 4px;
+    margin-left: 0px;
+    display: inline-block;
+    padding: 3px;
+    border-radius: 2px;
+}
+input[disabled] {
+    background-color: #BBBBBB;
+}
