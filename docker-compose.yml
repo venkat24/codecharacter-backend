@@ -21,12 +21,12 @@ services:
     environment:
       - MYSQL_DATABASE:'pragyan17_ppl'
 
-  sim:
-    build: ./docker/sim/
-    volumes: 
-     - ./sim:/var/www/code-character/simulator
-    depends_on:
-      - app
+  #sim:
+    #build: ./docker/sim/
+    #volumes_from:
+      #- app
+    #depends_on:
+      #- app
 
   db:
     image: mysql:latest
