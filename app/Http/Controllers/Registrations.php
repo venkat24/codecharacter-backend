@@ -423,7 +423,8 @@ class Registrations extends Controller
               <br />
               You have been invited to join team $teamName.
               <br />
-              Click the following link to accept the invitation :
+              Click the following link to accept the invitation -
+              <br />
               <button class='button' onclick='acceptInvite(event)' id='$teamName'>
                 Accept Invitation
               </button>
@@ -446,7 +447,6 @@ class Registrations extends Controller
      * Confirm invite from the specified email address
      *
      * @param teamName
-     * @param LeaderEmail
      * @param UserEmail
      * @return \Illuminate\Http\Response
      */
@@ -507,10 +507,16 @@ class Registrations extends Controller
             //Delete the invites a person has gotten
             Notification::where('userId','=',$toRegistration->id)
                         ->where('messageType','=','INVITE')
+                        ->where('teamName','=',$teamName)
                         ->delete();
 
             Invite::where('toRegistrationId','=',$toRegistration->id)
+                  ->where('fromTeamId','='.$fromTeam->id)
                   ->delete();
+
+            Session::put([
+                'team_name' => $teamName
+            ]);
 
             $response = JSONResponse::response(200, 'Invite Confirmed');
             return $response;
