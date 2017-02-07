@@ -159,30 +159,31 @@ class Registrations extends Controller
             $currentLeaderEmail = $request->input('currentLeaderEmail');
             $newLeaderEmail = $request->input('newLeaderEmail');
 
-            $leaderCheck = Team::where('leaderRegistrationId','=',$currentLeaderEmail)
+            $currentLeader = Registration::where('emailId','=',$currentLeaderEmail)
+                                         ->first();
+
+            $newLeader = Registration::where('emailId','=',$newLeaderEmail)
+                                         ->first();
+
+            $leaderCheck = Team::where('leaderRegistrationId','=',$currentLeader->id)
+                               ->where('teamName','=',$teamName)
                                ->first();
 
             $memberCheck = Registration::where('teamName','=',$teamName)
-                                       ->where('id','=',$newLeaderEmail)
+                                       ->where('id','=',$newLeader->id)
                                        ->first();
 
-            if(!$leaderCheck || !$memberCheck) {
-                return JSONResponse::response(400,'Given leaders are not members of the team');
+            if(empty($leaderCheck)) {
+                return JSONResponse::response(400,'Given email is not a current leader of the team');
             }
 
-            $currentLeaderId = Registration::where('id','=',$currentLeaderEmail)
-                                           ->first();
-
-            $newLeaderId = Registration::where('id','=',$newLeaderEmail)
-                                           ->first();
-
-            if(!$currentLeaderId || !$newLeaderId) {
-                return JSONResponse::response('Invalid Leader or New Leader');
+            if(empty($memberCheck)) {
+                return JSONResponse::response(400,'Given leader is not a member of the team');
             }
 
-            Team::where('leaderRegistrationId','=',$currentLeaderEmail)
+            Team::where('leaderRegistrationId','=',$currentLeader->id)
                 ->update([
-                    'leaderRegistrationId' => $newLeaderEmail,
+                    'leaderRegistrationId' => $newLeader->id,
                 ]);
 
             return JSONResponse::response(200,"Leader Changed");
