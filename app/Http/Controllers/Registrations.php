@@ -310,17 +310,27 @@ class Registrations extends Controller
                 return JSONResponse::response(400, "TEAM DOESN'T EXIST");
             }
 
-            $teamMembers = Invite::where('fromTeamId','=',$teamId)
-                                  ->join('registrations','invites.toRegistrationId','=','registrations.id')
-                                  ->get(['registrations.name','registrations.emailId','registrations.id','invites.status'])
-                                  ->toArray();
+            $pendingTeamMembers = Invite::where('fromTeamId','=',$teamId)
+                                        ->join('registrations','invites.toRegistrationId','=','registrations.id')
+                                        ->where('invites.status','=','SENT')
+                                        ->get(['registrations.name','registrations.emailId','registrations.id','invites.status'])
+                                        ->toArray();
 
             $teamLeader = Team::where('teams.teamName', '=', $teamName)
-                                ->join('registrations', 'teams.leaderRegistrationId', '=','registrations.id')
-                                ->get(['registrations.name','registrations.emailId','registrations.id'])
-                                ->first();
-            $teamLeader["status"] = "LEADER";
-            array_unshift($teamMembers, $teamLeader);
+                              ->join('registrations', 'teams.leaderRegistrationId', '=','registrations.id')
+                              ->get(['registrations.name','registrations.emailId','registrations.id'])
+                              ->toArray();
+
+            $confirmedTeamMembers = Registration::where('teamName','=',$teamName)
+                                                ->where('registrations.id','!=',$teamLeader[0]['id'])
+                                                ->join('invites','invites.toRegistrationId','=','registrations.id')
+                                                ->get(['registrations.name','registrations.emailId','registrations.id','invites.status'])
+                                                ->toArray();
+
+            $teamLeader[0]['status'] = "LEADER";
+            //$teamMembers = $teamLeader->union($confirmedTeamMembers);
+            //$teamMembers = $pendingTeamMembers->toBase()->merge($teamLeader)->merge($confirmedTeamMembers);
+            $teamMembers = array_merge($teamLeader, $confirmedTeamMembers, $pendingTeamMembers);
             return JSONResponse::response(200, $teamMembers);
     }
 
