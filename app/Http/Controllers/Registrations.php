@@ -526,4 +526,65 @@ class Registrations extends Controller
             return JSONResponse::response(500, $e->getMessage());
         }
     }
+
+    /**
+     * Cancel Invite
+     * Cancel invite sent to the specified email address
+     *
+     * @param teamName
+     * @param UserEmail
+     * @return \Illuminate\Http\Response
+     */
+    public function cancelInvite(Request $request) {
+        try {
+            $validator = Validator::make($request->all(), [
+                'teamName'        => 'required',
+                'userEmail'       => 'required',
+            ]);
+            if($validator->fails()) {
+                $message = $validator->errors()->all();
+                return JSONResponse::response(400, $message);
+            }
+
+            $teamName = $request->input('teamName');
+            $teamNameCheck = Team::where('teamName','=',$teamName)
+                                 ->first();
+
+            if(!$teamNameCheck) {
+                return JSONResponse::response(400,"Invalid Team Name");
+            }
+
+            $email = $request->input('userEmail');
+            $emailCheck = Registration::where('emailId','=',$email)
+                                      ->first();
+
+            if(!$emailCheck) {
+                return JSONResponse::response(400,"Invalid Email ID");
+            }
+
+            $inviteStatusCheck = Invite::where('toRegistrationId','=',$emailCheck->id)
+                                       ->where('fromTeamId','=',$teamNameCheck->id)
+                                       ->where('status','=','SENT')
+                                       ->first();
+
+            if(!$inviteStatusCheck) {
+                return JSONResponse::response(400,"Invalid Request. No Invite to Cancel");
+            }
+
+            Notification::where('userId','=',$emailCheck->id)
+                        ->where('messageType','=','INVITE')
+                        ->where('teamName','=',$teamName)
+                        ->delete();
+
+            Invite::where('toRegistrationId','=',$emailCheck->id)
+                  ->where('fromTeamId','=',$teamNameCheck->id)
+                  ->delete();
+
+            return JSONResponse::response(200,"Invite Cancelled");
+
+        } catch (Exception $e) {
+            Log::error($e->getMessage()." ".$e->getLine());
+            return JSONResponse::response(500, $e->getMessage());
+        }
+    }
 }
