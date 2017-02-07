@@ -9,9 +9,7 @@ function acceptInvite(event) {
         data: body,
     });
     request.done(function (data) {
-        console.log(data);
-        if(data.status_code === 200) {
-            location.reload();
-        }
+        alert(data.message);
+        location.reload();
     });
 }
