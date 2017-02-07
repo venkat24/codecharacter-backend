@@ -219,10 +219,20 @@ class Registrations extends Controller
 
             $userEmail = $request->input('userEmail');
 
-            Registration::where('emailId','=',$userEmail)
-                        ->update([
-                            'teamName' => '',
-                        ]);
+            $userCheck = Registration::where('emailId','=',$userEmail)
+                                     ->first();
+
+            if(!$userEmail) {
+                return JSONResponse::response(400, "Member dows not exist");
+            }
+
+
+            $user = Registration::where('emailId','=',$userEmail)
+                                ->update([
+                                    'teamName' => null,
+                                ]);
+
+            return JSONResponse::response(200,'Member was deleted');
 
         } catch (Exception $e) {
             Log::error($e->getMessage()." ".$e->getLine());
