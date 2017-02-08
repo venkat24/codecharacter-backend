@@ -19,14 +19,7 @@ services:
     env_file:
       - .env
     environment:
-      - MYSQL_DATABASE:'pragyan17_ppl'
-
-  #sim:
-    #build: ./docker/sim/
-    #volumes_from:
-      #- app
-    #depends_on:
-      #- app
+      - MYSQL_DATABASE:'code_character'
 
   db:
     image: mysql:latest
