@@ -7,6 +7,7 @@ use App\Jobs\SimulatorProcess;
 use Sangria\JSONResponse;
 use Validator;
 
+use Session;
 use App\Job;
 use App\Submissions;
 use App\Team;
@@ -74,7 +75,6 @@ class SimulatorCall extends Controller
     public function submitCode(Request $request)
     {
         $validator = Validator::make($request->all(),[
-            'teamName' => 'required|string',
             'file'     => 'required',
         ]);
         if ($validator->fails())
@@ -83,17 +83,12 @@ class SimulatorCall extends Controller
             return JSONResponse::response(400,$message);
         }
         $file = $request->file('file');
-        $team_name = $request->input('teamName');
+        $team_name = Session::get('team_name');
         $team_id = Team::where('teamName','=',$team_name)
                        ->pluck('id');
 
         $ext = $file->getClientOriginalExtension();
-        if($file->isValid()) {
-            $filename = substr(md5(rand()), 0, 8)."_".$team_id.".".$ext;
-            str_replace(" ", "_", $filename);
-            $file = $request->file('file');
-            $file->move(storage_path('submissions'), $filename);
-        } else {
+        if(!$file->isValid()) {
             return JSONResponse::response(422,'Invalid file');
         }
         $team = Team::where('id','=',$team_id)
@@ -104,9 +99,9 @@ class SimulatorCall extends Controller
             $submission = Submissions::insert([
                     'teamId' => $team_id,
                     'levelNo'  => 0,
-                    'sourceCodePath' => storage_path('submissions').$filename
+                    'submittedCode' => file_get_contents($file->getRealPath()),
             ]);
-            $this->callSimulator($filename);
+            $this->callSimulator($file->getRealPath());
             return JSONResponse::response(200, 'Upload successful');
         }
     }
