@@ -18,11 +18,11 @@ class CreateSubmissionsTable extends Migration
             $table->dateTime('completedOn');
             $table->integer('levelNo');
             $table->enum('status', ['RUNNING', 'WAITING', 'COMPLETED','FAILED'])->default('WAITING');
-            $table->string('sourceCodePath',100);
+            //$table->binary('submittedCode');
             $table->timestamps();
         });
+        DB::statement('ALTER TABLE submissions ADD submittedCode MEDIUMBLOB');
     }
-
     /**
      * Reverse the migrations.
      *
