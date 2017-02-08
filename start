@@ -11,6 +11,15 @@ docker-compose up --build -d
 
 # Run the simulator container
 docker run -td -P \
+    -w "/var/www/code-character/sim/" \
     --name $SIM_CONTAINER_NAME \
-    -v /home/venkat/bin/codecharacter-backend/simulator:/var/www/code-character/sim python
+    -v $(pwd)/simulator:/var/www/code-character/sim python:latest
 
+# Addition package installations
+docker network connect codecharacterbackend_default $SIM_CONTAINER_NAME
+docker exec $SIM_CONTAINER_NAME apt-get update -y
+docker exec $SIM_CONTAINER_NAME apt-get install cmake python-pip -y
+docker exec $SIM_CONTAINER_NAME pip install sqlalchemy pymysql
+
+# Run the python watcher script
+docker exec $SIM_CONTAINER_NAME python test.py
