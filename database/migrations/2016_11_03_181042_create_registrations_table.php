@@ -14,7 +14,7 @@ class CreateRegistrationsTable extends Migration
     {
         Schema::create('registrations', function (Blueprint $table) {
             $table->increments('id')->unsigned();
-            $table->string('teamName');
+            $table->string('teamName')->unique();
             $table->string('name',255);
             $table->string('emailId')->unique();
             $table->timestamps();
