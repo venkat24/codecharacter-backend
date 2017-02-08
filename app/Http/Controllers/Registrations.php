@@ -83,18 +83,11 @@ class Registrations extends Controller
      */
     public function deleteTeam(Request $request) {
         try {
-            $validator = Validator::make($request->all(), [
-                'teamName'    => 'required|string',
-            ]);
-            if($validator->fails()) {
-                $message = $validator->errors()->all();
-                return JSONResponse::response(400, $message);
-            }
             $leaderEmail = $request->input('leaderEmail');
             $leaderRegId = Registration::where('emailId','=',$leaderEmail)
                                        ->pluck('id');
 
-            $teamName = $request->input('teamName');
+            $teamName = Session::get('team_name');
             $teamInfo = Team::where('teamName','=',$teamName)
                                  ->first();
 
@@ -154,7 +147,7 @@ class Registrations extends Controller
                 return JSONResponse::response(400, $message);
             }
 
-            $teamName = $request->input('teamName');
+            $teamName = Session::get('team_name');
 
             $currentLeaderEmail = $request->input('currentLeaderEmail');
             $newLeaderEmail = $request->input('newLeaderEmail');
@@ -213,7 +206,7 @@ class Registrations extends Controller
                 $message = $validator->errors()->all();
                 return JSONResponse::response(400, $message);
             }
-            $teamName = $request->input('teamName');
+            $teamName = Session::get('team_name');
             $teamInfo = Team::where('teamName','=',$teamName)
                             ->first();
 
@@ -252,15 +245,13 @@ class Registrations extends Controller
     public function leaveTeam(Request $request) {
         try {
             $validator = Validator::make($request->all(), [
-                'teamName'  => 'required|string',
                 'userEmail' => 'required|string',
             ]);
             if($validator->fails()) {
                 $message = $validator->errors()->all();
                 return JSONResponse::response(400, $message);
             }
-
-            $teamName = $request->input('teamName');
+            $teamName = Session::get('team_name');
             $userEmail = $request->input('userEmail');
 
             $currentUser = Registration::where('emailId','=',$userEmail)
@@ -301,7 +292,7 @@ class Registrations extends Controller
                 $message = $validator->errors()->all();
                 return JSONResponse::response(400, $message);
             }
-            $teamName = $request->input('teamName');
+            $teamName = Session::get('team_name');
 
             $teamId = Team::where('teamName','=',$teamName)->pluck('id');
 
@@ -353,8 +344,9 @@ class Registrations extends Controller
             $message = $validator->errors()->all();
             return JSONResponse::response(400, $message);
         }
-        $response = Team::where('teamName','=',$request->input('teamName'))
-            ->get();
+        $teamName = Session::get('team_name');
+        $response = Team::where('teamName','=',$teamName)
+                        ->get();
         if($response->isEmpty()) {
             return JSONResponse::response(200, "DOES NOT EXIST");
         }
@@ -388,7 +380,7 @@ class Registrations extends Controller
              * toRegistrationId must be queried from email
              */
 
-            $teamName = $request->input('teamName');
+            $teamName = Session::get('team_name');
             $email    = $request->input('email');
 
             $memberExistsCheck = Registration::where('emailId','=',$email)
@@ -466,7 +458,7 @@ class Registrations extends Controller
              * toRegistrationId must be queried from email
              */
 
-            $teamName = $request->input('teamName');
+            $teamName = Session::get('team_name');
             $userEmail = $request->input('userEmail');
 
             $fromTeam = Team::where('teamName','=',$teamName)
@@ -546,7 +538,7 @@ class Registrations extends Controller
                 return JSONResponse::response(400, $message);
             }
 
-            $teamName = $request->input('teamName');
+            $teamName = Session::get('team_name');
             $teamNameCheck = Team::where('teamName','=',$teamName)
                                  ->first();
 
