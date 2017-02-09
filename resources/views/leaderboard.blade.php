@@ -15,6 +15,7 @@
     </div>
   </div>
   <div class="row">
+    <p style="text-align:center">Submissions have not yet been opened</p>
     <div class="twelve columns callout-container primary">
       <table>
         <tbody>

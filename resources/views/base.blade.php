@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="{{asset('stylesheets/base.css')}}">
 
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.1/jquery.min.js"></script>
-    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/vue/dist/vue.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.6/handlebars.min.js"></script>
     <script src="{{asset('javascripts/modernizr.foundation.js')}}"></script>
 
@@ -33,8 +33,8 @@
 	  <ul>
         <li><a href="/">Home</a></li>
         <li><a href="/rules">Rules</a></li>
+        <li><a href="https://jhurricane96.github.io/code_character_player_docs/_build/html/index.html" target="_blank">Docs</a></li>
         <li><a href="/leaderboard">Scores</a></li>
-        <li><a href="/docs">Docs</a></li>
         @if (Session::get('user_email'))
         <li><a href="/notifications">Alerts</a></li>
         <li><a href="/submit">Submit</a></li>
