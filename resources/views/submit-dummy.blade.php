@@ -2,7 +2,7 @@
 
 @section('links')
   <title>Submit - Code Character</title>
-  <link rel="stylesheet" href="{{asset('stylesheets/submit.css')}}">
+  <link rel="stylesheet" href="stylesheets/submit.css">
 @endsection
 
 @section('main')

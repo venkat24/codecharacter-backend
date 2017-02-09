@@ -2,7 +2,7 @@
 
 @section('links')
   <title>Documentation - CodeCharacter</title>
-  <link rel="stylesheet" href="{{asset('stylesheets/home.css')}}">
+  <link rel="stylesheet" href="stylesheets/home.css">
 @endsection
 
 @section('main')
@@ -37,5 +37,5 @@ if (dma_manet &lt; 52) {
 </div>
 </div>
 
-  <script src="{{asset('javascripts/home.js')}}"></script>
+  <script src="javascripts/home.js"></script>
 @endsection

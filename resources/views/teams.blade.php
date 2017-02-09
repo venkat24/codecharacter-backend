@@ -1,8 +1,8 @@
 @extends('base')
 
 @section('links')
-  <title>Welcome to Foundation | Banded</title>
-  <link rel="stylesheet" href="{{asset('stylesheets/teams.css')}}">
+  <title>Team - CodeCharacter</title>
+  <link rel="stylesheet" href="stylesheets/teams.css">
 @endsection
 
 @section('main')
@@ -31,7 +31,7 @@
           <li>You may leave the team if you are not the leader</li>
     </div>
     <div class="four columns">
-      <img src="{{asset('images/king.png')}}" />
+      <img src="images/king.png" />
     </div>
   </div>
 
@@ -49,5 +49,5 @@
     </div>
   </div>
 
-<script src="{{asset('javascripts/teams.js')}}"></script>
+<script src="javascripts/teams.js"></script>
 @endsection

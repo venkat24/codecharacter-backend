@@ -1,9 +1,9 @@
 @extends('base')
 
 @section('links')
-  <title>Welcome to Foundation | Banded</title>
-  <link rel="stylesheet" href="{{asset('stylesheets/leaderboard.css')}}">
-  <link rel="stylesheet" href="{{asset('stylesheets/notifications.css')}}">
+  <title>Scores - CodeCharacter</title>
+  <link rel="stylesheet" href="stylesheets/leaderboard.css">
+  <link rel="stylesheet" href="stylesheets/notifications.css">
 @endsection
 
 @section('main')
