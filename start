@@ -4,7 +4,7 @@
 SIM_CONTAINER_NAME=codecharacterbackend_sim_1
 
 # Remove the existing containers
-#
+docker rm -f codecharacterbackend_app_1 codecharacterbackend_web_1 codecharacterbackend_db_1 codecharacterbackend_sim_1 codecharacterbackend_pma_1
 
 # Launch app, web, and db containers
 docker-compose up --build -d
@@ -38,6 +38,7 @@ docker exec codecharacterbackend_app_1 php code-character/artisan migrate
 
 # Change permissions of the web app
 docker exec codecharacterbackend_app_1 chown www-data:www-data code-character -R
+docker exec codecharacterbackend_db_1 chown mysql:mysql /var/lib//mysql -R
 
 # Finish
 echo "Success!"
