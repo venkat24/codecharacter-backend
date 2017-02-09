@@ -19,7 +19,8 @@
       <label>Password
         <input type="password" id="password" placeholder="Password">
       </label>
-      <p><button class="button expanded" onclick="login();return false;">Log In</button></p>
+      <br />
+      <p style="text-align:center"><button id="login-button" class="button expanded" onclick="login();return false;">Log In</button></p>
     </div>
 	</div>
 	<div class="four columns">

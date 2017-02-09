@@ -8,6 +8,7 @@ function login() {
 	var method = 'POST';
 	var username = $("#username").val();
 	var password = $("#password").val();
+	$('#login-button').prop('disabled', true);
 	var body = {
 		"pragyanEmail": username,
 		"password": password,
@@ -25,6 +26,7 @@ function login() {
 			location.href = SITE_BASE_URL + "/";
 		} else {
 			alert("Sorry! Login failed.");
+            $('#login-button').prop('disabled', false);
 		}
 	});
 }
