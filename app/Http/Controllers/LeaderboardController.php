@@ -31,7 +31,8 @@ class LeaderboardController extends Controller
                                       ->take(5)
                                       ->get();
 
-            return view('leaderboard',[
+            //return view('leaderboard',[
+            return view('leaderboard-dummy',[
               'leaderboard' => $leaderboard
             ]);
         } catch (Exception $e) {
