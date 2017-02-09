@@ -22,6 +22,7 @@ var teamData = new Vue({
 	methods: {
 		create: function() {
 			var teamName = document.getElementById('team-name').value;
+			document.getElementById('team-name').disabled = true;
 			if (!USER_DATA.teamName) {
 				$.ajax({
 					url: SITE_BASE_URL + '/api/create_team',
@@ -264,6 +265,7 @@ function leader(button) {
 
 			teamData.buttonText = 'Delete';
 			teamData.teamMemberSeen = true;
+			document.getElementById('team-name').disabled = true;
 			document.getElementById('create-button').className += ' alert';
 			if (teamData.teamMembers.length < 3)
 				teamData.buttonSeen = true;
