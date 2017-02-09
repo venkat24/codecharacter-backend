@@ -52,10 +52,12 @@ class Auth extends Controller
 
             $result = json_decode($resultRaw->getBody());
 
-            if(is_object($result)) {
-              $fullName = $result->message->user_fullname;
-            } else {
-              return JSONResponse::response(400, "Login Failed");
+            if($result->status_code == 200) {
+                $fullName = $result->message->user_fullname;
+            } else if ($result->status_code == 401){
+                return JSONResponse::response(400, "Bad Credentials");
+            } else {  
+                return JSONResponse::response(400, "Login Failed");
             }
 
             $checkForUser = Registration::where('emailid','=',$pragyanEmail)
