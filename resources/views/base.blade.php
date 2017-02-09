@@ -70,6 +70,9 @@
         <div class="six columns">
           <p>&copy; Copyright <a href="http://pragyan.org">Pragyan</a> 2017. Made with ♥ by <a href="http://deltaforce.club">Delta Force</a></p>
         </div>
+        <div class="six columns">
+          <p style="text-align:right"><a href="https://www.digitalocean.com/"><img style="height:35px" src="{{asset('images/digitalOcean.png')}}"></a></p>
+        </div>
       </div>
     </div> 
   </footer>
