@@ -327,9 +327,12 @@ class Registrations extends Controller
 
             $confirmedTeamMembers = Registration::where('teamName','=',$teamName)
                                                 ->where('registrations.id','!=',$teamLeader[0]['id'])
-                                                ->join('invites','invites.toRegistrationId','=','registrations.id')
-                                                ->get(['registrations.name','registrations.emailId','registrations.id','invites.status'])
-                                                ->toArray();
+                                                ->get(['registrations.name','registrations.emailId','registrations.id'])
+						->toArray();
+
+	    foreach($confirmedTeamMembers as $key => $member) {
+		    $confirmedTeamMembers[$key]['status'] = 'ACCEPTED';
+	    }
 
             $teamLeader[0]['status'] = "LEADER";
             //$teamMembers = $teamLeader->union($confirmedTeamMembers);
