@@ -23,3 +23,9 @@
   font-weight: bold;
   font-family: 'Roboto Mono', monospace;
 }
+.operatingSystemLogos {
+    margin: 20px;
+    margin-bottom: 5px;
+    -webkit-filter: invert(100%);
+            filter: invert(100%);
+}
