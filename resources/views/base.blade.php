@@ -32,7 +32,7 @@
 	<nav>
 	  <ul>
         <li><a href="/">Home</a></li>
-        <li><a href="/rules">Rules</a></li>
+        <li><a href="/rules">Readme</a></li>
         <li><a href="https://jhurricane96.github.io/code_character_player_docs/_build/html/index.html" target="_blank">Docs</a></li>
         <li><a href="/leaderboard">Scores</a></li>
         @if (Session::get('user_email'))
