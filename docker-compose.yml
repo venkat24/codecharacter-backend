@@ -1,6 +1,7 @@
 version: '2'
 services:
   web:
+    container_name: codecharacterbackend_web_1
     image: nginx:latest
     volumes:
       - ./docker/nginx/:/etc/nginx/conf.d/
@@ -11,6 +12,7 @@ services:
     depends_on:
       - app
   app:
+    container_name: codecharacterbackend_app_1
     build: ./docker/app/
     volumes: 
       - ./:/var/www/code-character
@@ -22,6 +24,7 @@ services:
       - MYSQL_DATABASE:'code_character'
 
   db:
+    container_name: codecharacterbackend_db_1
     image: mysql:latest
     volumes:
       - ./docker/mysql:/var/lib/mysql
@@ -31,4 +34,14 @@ services:
       MYSQL_DATABASE: code_character
       MYSQL_ROOT_PASSWORD: pwd
     ports:
-      - "8000:3306"
+      - "7006:3306"
+
+  phpmyadmin:
+    container_name: codecharacterbackend_pma_1
+    image: phpmyadmin/phpmyadmin
+    env_file:
+      - .env
+    ports:
+      - "7005:80"
+    depends_on:
+      - db
