@@ -32,16 +32,9 @@ class SimulatorCall extends Controller
      *
      */
     public function checkJobStatus(Request $request) {
-        $validator = Validator::make($request->all(),[
-            'teamName' => 'required|string'
-        ]);
-        if ($validator->fails()) {
-            return JSONResponse::response(400,'Invalid parameters');
-        }
-        $teamName = $request->input('teamName'); 
+        $teamName = Session::get('team_name'); 
 
         $teamId = Team::where('teamName','=',$teamName)
-                      ->first()
                       ->pluck('id');
 
         $job = Submissions::where('teamId','=',$teamId)
@@ -49,6 +42,7 @@ class SimulatorCall extends Controller
                           ->first();
 
         if($job) {
+            $job_status = $job->status;
             $status_code = 200;
             $message = "";
             if ($job_status == "ACCEPTED" || $job_status == "REJECTED") {
