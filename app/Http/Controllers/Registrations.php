@@ -31,7 +31,7 @@ class Registrations extends Controller
         try {
             $validator = Validator::make($request->all(), [
                 'teamName'    => 'required|string',
-                'leaderEmail' => 'required|string',
+                'leaderEmail' => 'required|email',
             ]);
             if($validator->fails()) {
                 $message = $validator->errors()->all();
@@ -139,8 +139,8 @@ class Registrations extends Controller
         try {
             $validator = Validator::make($request->all(), [
                 'teamName'           => 'required|string',
-                'currentLeaderEmail' => 'required|string',
-                'newLeaderEmail'     => 'required|string',
+                'currentLeaderEmail' => 'required|email',
+                'newLeaderEmail'     => 'required|email',
             ]);
             if($validator->fails()) {
                 $message = $validator->errors()->all();
@@ -200,7 +200,7 @@ class Registrations extends Controller
         try {
             $validator = Validator::make($request->all(), [
                 'teamName'    => 'required|string',
-                'userEmail'   => 'required|string',
+                'userEmail'   => 'required|email',
             ]);
             if($validator->fails()) {
                 $message = $validator->errors()->all();
@@ -245,7 +245,7 @@ class Registrations extends Controller
     public function leaveTeam(Request $request) {
         try {
             $validator = Validator::make($request->all(), [
-                'userEmail' => 'required|string',
+                'userEmail' => 'required|email',
             ]);
             if($validator->fails()) {
                 $message = $validator->errors()->all();
@@ -380,7 +380,7 @@ class Registrations extends Controller
     public function sendInvite(Request $request) {
         try {
             $validator = Validator::make($request->all(), [
-                'email'     => 'required',
+                'email'     => 'email',
             ]);
             if($validator->fails()) {
                 $message = $validator->errors()->all();
@@ -457,8 +457,8 @@ class Registrations extends Controller
     public function confirmInvite(Request $request) {
         try {
             $validator = Validator::make($request->all(), [
-                'teamName'        => 'required',
-                'userEmail'       => 'required',
+                'teamName'        => 'required|string',
+                'userEmail'       => 'required|email',
             ]);
             if($validator->fails()) {
                 $message = $validator->errors()->all();
@@ -549,8 +549,8 @@ class Registrations extends Controller
     public function cancelInvite(Request $request) {
         try {
             $validator = Validator::make($request->all(), [
-                'teamName'        => 'required',
-                'userEmail'       => 'required',
+                'teamName'        => 'required|string',
+                'userEmail'       => 'required|email',
             ]);
             if($validator->fails()) {
                 $message = $validator->errors()->all();
