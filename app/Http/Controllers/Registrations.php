@@ -305,13 +305,6 @@ class Registrations extends Controller
      * @return Illuminate/Http/Response
      */
     public function getTeamMembers(Request $request) {
-            $validator = Validator::make($request->all(), [
-                'teamName'    => 'required|string',
-            ]);
-            if($validator->fails()) {
-                $message = $validator->errors()->all();
-                return JSONResponse::response(400, $message);
-            }
             $teamName = Session::get('team_name');
 
             $teamId = Team::where('teamName','=',$teamName)->pluck('id');
@@ -387,7 +380,6 @@ class Registrations extends Controller
     public function sendInvite(Request $request) {
         try {
             $validator = Validator::make($request->all(), [
-                'teamName'  => 'required',
                 'email'     => 'required',
             ]);
             if($validator->fails()) {
