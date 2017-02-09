@@ -96,3 +96,4 @@ nav > ul > li:hover:not(:first-child):before {
     /*transform: scale(1.05) translate(-50%,-50%);*/
     top: calc(50% - 1px);
 }
+

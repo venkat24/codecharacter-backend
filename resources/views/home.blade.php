@@ -60,17 +60,15 @@
       <p>Before submitting your AI code, you can watch the game run on your desktop and make sure your army is fighting just the way you want. When you're ready, submit your code for a place on the Leaderboard!</p>
       
       <p>The Code Character Simulator is available on all popular platforms. Pick your poison!</p>
-     <p style="text-align:center">
+     <div style="text-align:center">
      @if (!Session::get('user_email'))
-        <a href="{{url('/login')}}"><img class="operatingSystemLogos" src="{{asset('images/Windows.png')}}"></a>
-        <a href="{{url('/login')}}"><img class="operatingSystemLogos" src="{{asset('images/Apple.png')}}"></a>
-        <a href="{{url('/login')}}"><img class="operatingSystemLogos" src="{{asset('images/Linux.png')}}"></a>
+        <span class="os-span"><a href="{{url('/login')}}"><img class="operatingSystemLogos" src="{{asset('images/Linux.png')}}"></a></span>
+        <span class="os-span"><img class="operatingSystemLogos" src="{{asset('images/Windows.png')}}"><div class="caption">Coming Soon!</div></span>
      @else
-        <a href="{{asset('/w.zip')}}"><img class="operatingSystemLogos" src="{{asset('images/Windows.png')}}"></a>
-        <a href="{{asset('/m.zip')}}"><img class="operatingSystemLogos" src="{{asset('images/Apple.png')}}"></a>
-        <a href="{{asset('/l.zip')}}"><img class="operatingSystemLogos" src="{{asset('images/Linux.png')}}"></a>
+        <span class="os-span"><a href="{{asset('/l.zip')}}"><img class="operatingSystemLogos" src="{{asset('images/Linux.png')}}"></a></span>
+        <span class="os-span"><img class="operatingSystemLogos" src="{{asset('images/Windows.png')}}"><div class="caption">Coming Soon!</div></span>
      @endif
-     </p>
+     </div>
           
     </div>
     <div class="four columns">

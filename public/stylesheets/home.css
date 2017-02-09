@@ -29,3 +29,12 @@
     -webkit-filter: invert(100%);
             filter: invert(100%);
 }
+.os-span {
+    position: relative;
+}
+.caption {
+    position: absolute;
+    left:0;
+    right:0;
+    top:50%;
+}
