@@ -31,7 +31,7 @@ Route::get('/rules', function () {
 Route::get('/submit', function () {
     if(Session::get('user_email')) {
         if (Session::get('team_name')) {
-            return view('submit');
+            return view('submit-dummy');
         } else {
             return Redirect::to('/teams');
         }
@@ -44,22 +44,20 @@ Route::get('/notifications','Notifications@showAllNotifications');
 Route::get('/leaderboard','LeaderboardController@getLeaderboard');
 // API routes
 Route::group(['middleware' => 'setResponseHeaders'], function() {
-    Route::get('api/simstart','SimulatorCall@callSimulator');
-    Route::post('api/create_team','Registrations@createTeam');
-    Route::get('api/get_team_members','Registrations@getTeamMembers');
-    Route::post('api/send_invite','Registrations@sendInvite'); 
-    Route::post('api/confirm_invite','Registrations@confirmInvite'); 
-    Route::post('/api/cancel_invite','Registrations@cancelInvite');
-    Route::get('/api/check_job_status', 'SimulatorCall@checkJobStatus');
-    Route::get('/api/check_if_team_exists', 'Registrations@checkIfTeamExists');
-    Route::post('/api/register_user','Registrations@newRegistration');
-    Route::post('/api/delete_member','Registrations@deleteMember');
-    Route::post('/api/delete_team','Registrations@deleteTeam');
-    Route::post('/api/change_leader','Registrations@changeLeader');
-    Route::post('/api/leave_team','Registrations@leaveTeam');
     Route::post('/api/login','Auth@login');
 });
 Route::group(['middleware' => ['checkSession','setResponseHeaders']], function() {
     Route::post('/api/logout','Auth@logout');
     Route::post('/api/submit_code', 'SimulatorCall@submitCode');
+    Route::post('/api/leave_team','Registrations@leaveTeam');
+    Route::post('/api/change_leader','Registrations@changeLeader');
+    Route::post('/api/delete_team','Registrations@deleteTeam');
+    Route::post('/api/delete_member','Registrations@deleteMember');
+    Route::get('/api/check_if_team_exists', 'Registrations@checkIfTeamExists');
+    Route::post('/api/create_team','Registrations@createTeam');
+    Route::get('/api/get_team_members','Registrations@getTeamMembers');
+    Route::post('/api/send_invite','Registrations@sendInvite'); 
+    Route::post('/api/confirm_invite','Registrations@confirmInvite'); 
+    Route::post('/api/cancel_invite','Registrations@cancelInvite');
+    Route::get('/api/check_job_status', 'SimulatorCall@checkJobStatus');
 });
