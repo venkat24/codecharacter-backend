@@ -15,6 +15,7 @@
 <li>Register for Pragyan</li>
 <li>Login for the event with your Pragyan ID and password</li>
 <li>Form a team if you wish. You can send invites to anyone else who has logged in at least once to the Code Character website.</li>
+<li>Requirements: <a href="https://cmake.org/download/" target="_blank">CMake</a>, <a href="https://www.gnu.org/software/make/" target="_blank">Make</a>, <a href="https://gcc.gnu.org/" target="_blank">g++</a> </li>
 <li>Download the simulator to get started with locally developing and testing your very own AI.</li>
 <li>Extract the simulator and from the extracted root, run <code>./codecharacter-renderer</code>.</li>
 </ol>
