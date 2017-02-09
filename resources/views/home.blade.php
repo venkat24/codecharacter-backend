@@ -51,7 +51,7 @@
       </div>
     </div>
   </div>
-  <div class="row" style="margin-top: 50px">
+  <div class="row" style="margin-top: 10px">
   <!-- Third Band (Image Right with Text) -->
   
     <div class="eight columns">
@@ -62,10 +62,12 @@
       <p>The Code Character Simulator is available on all popular platforms. Pick your poison!</p>
      <div style="text-align:center">
      @if (!Session::get('user_email'))
-        <span class="os-span"><a href="/login"><img class="operatingSystemLogos" src="images/Linux.png"></a></span>
+        <span class="os-span"><a href="/login"><img class="operatingSystemLogos" src="images/Linux.png"></a><div class="caption">Linux 64-bit</div></span>
+        <span class="os-span"><a href="/login"><img class="operatingSystemLogos" src="images/Linux.png"></a><div class="caption">Linux 32-bit</div></span>
         <span class="os-span"><img class="operatingSystemLogos" src="images/Windows.png"><div class="caption">Coming Soon!</div></span>
      @else
-        <span class="os-span"><a href="l.zip"><img class="operatingSystemLogos" src="images/Linux.png"></a></span>
+        <span class="os-span"><a href="codechar_linux_x64.tar.gz"><img class="operatingSystemLogos" src="images/Linux.png"></a><div class="caption">Linux 64-bit</div></span>
+        <span class="os-span"><a href="codechar_linux_ia32.tar.gz"><img class="operatingSystemLogos" src="images/Linux.png"></a><div class="caption">Linux 32-bit</div></span>
         <span class="os-span"><img class="operatingSystemLogos" src="images/Windows.png"><div class="caption">Coming Soon!</div></span>
      @endif
      </div>
