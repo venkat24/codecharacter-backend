@@ -4,7 +4,7 @@
 SIM_CONTAINER_NAME=codecharacterbackend_sim_1
 
 # Remove the existing containers
-docker rm -f `docker ps -aq`
+#
 
 # Launch app, web, and db containers
 docker-compose up --build -d
@@ -13,13 +13,31 @@ docker-compose up --build -d
 docker run -td -P \
     -w "/var/www/code-character/sim/" \
     --name $SIM_CONTAINER_NAME \
+    --cpu-shares=512 \
+    --cpuset-cpus="0" \
+    --memory=512m \
+    -u root --ulimit nproc=5 \
     -v $(pwd)/simulator:/var/www/code-character/sim python:latest
 
 # Addition package installations
 docker network connect codecharacterbackend_default $SIM_CONTAINER_NAME
 docker exec $SIM_CONTAINER_NAME apt-get update -y
-docker exec $SIM_CONTAINER_NAME apt-get install cmake python-pip -y
+docker exec $SIM_CONTAINER_NAME apt-get install python-pip -y
 docker exec $SIM_CONTAINER_NAME pip install sqlalchemy pymysql
 
+# Get cmake binaries
+docker exec $SIM_CONTAINER_NAME wget https://cmake.org/files/v3.8/cmake-3.8.0-rc1-Linux-x86_64.tar.gz
+docker exec $SIM_CONTAINER_NAME tar xvf cmake-3.8.0-rc1-Linux-x86_64.tar.gz
+docker exec $SIM_CONTAINER_NAME mv cmake-3.8.0-rc1-Linux-x86_64/bin/cmake /usr/bin/
+
 # Run the python watcher script
-docker exec $SIM_CONTAINER_NAME python test.py
+# docker exec $SIM_CONTAINER_NAME python watch.py
+
+# Change permissions of the web app
+docker exec codecharacterbackend_app_1 chown www-data:www-data code-character -R
+
+# Run Migrations
+docker exec codecharacterbackend_app_1 php code-character/artisan migrate
+
+# Finish
+echo "Success!"
