@@ -12,7 +12,7 @@
   <div class="four columns">
     <div class="row column log-in-form" onkeydown="enter(event)">
       <h4 class="text-center">Log in with your Pragyan account</h4>
-      <div class="text-center" style="color: #FF9999">You MUST have a <a href="https://www.pragyan.org/17/home/+login&subaction=register">Pragyan account</a> before registering for Code Character</div>
+      <div class="text-center" style="color: #FF9999">You MUST have a <a target="_blank" href="https://www.pragyan.org/17/home/+login&subaction=register">Pragyan account</a> before registering for Code Character</div>
       <label>Email
         <input type="text" id="username" placeholder="somebody@example.com">
       </label>
