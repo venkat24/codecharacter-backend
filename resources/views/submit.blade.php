@@ -17,7 +17,7 @@
         Compress your code into .zip format and upload it below.    
       </p>
       <p>
-        Please check your previous submission status before submitting. If your status is WAITING or RUNNING, uploading new code will stop execution of your previously uploaded code and push you to the back of the queue.
+       Please check your previous submission status before submitting. If your status is WAITING or RUNNING, uploading new code will stop execution of your previously uploaded code and push you to the back of the queue.
       </p>
       <p>
         Ensure that you are uploading the following files and only the follwing files :
