@@ -262,6 +262,26 @@ class Registrations extends Controller
                 return JSONResponse::response(400,'Invalid User');
             }
 
+            $leaderCheck = Team::where('leaderRegistrationId','=',$currentUser->id)
+                               ->first();
+
+            if(!empty($leaderCheck)) {
+                //The person is a leader
+                $newLeader = Registration::where('id','!=',$currentUser)
+                                         ->where('teamName','=',$teamName)
+                                         ->first();
+                if(empty($newLeader)) {
+                    return JSONResponse::response(400,"Cannot leave team. Only one member.");
+                }
+                // Make the next person a leader
+                Team::where('leaderRegistrationId','=',$currentUser->id)
+                    ->update([
+                        'leaderRegistrationId' => $newLeader->id
+                    ]);
+                return JSONResponse::response(200,"Left from Team. ".$newLeader->emailId." is now the leader");
+
+            }
+
             Registration::where('id','=',$currentUser->id)
                          ->update([
                             'teamName' => null
