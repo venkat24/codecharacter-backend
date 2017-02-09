@@ -478,7 +478,7 @@ class Registrations extends Controller
              * toRegistrationId must be queried from email
              */
 
-            $teamName = Session::get('team_name');
+            $teamName = $request->input('teamName');
             $userEmail = $request->input('userEmail');
 
             $fromTeam = Team::where('teamName','=',$teamName)
@@ -486,6 +486,13 @@ class Registrations extends Controller
 
             $leaderEmail = Registration::where('id','=',$fromTeam->id)
                                        ->first();
+
+            $teamCountCheck = Registration::where('teamName','=',$teamName)
+                                          ->get();
+
+            if($teamCountCheck->count() >= 3) {
+                return JSONResponse::response('Team is full!');
+            }
 
             $toRegistration = Registration::where('emailId','=',$userEmail)
                                              ->first();
