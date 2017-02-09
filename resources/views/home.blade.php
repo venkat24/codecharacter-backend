@@ -62,7 +62,7 @@
       <p>The Code Character Simulator is available on all popular platforms. Pick your poison!</p>
      <div style="text-align:center">
      @if (!Session::get('user_email'))
-        <span class="os-span"><a href="{{url('/login')}}"><img class="operatingSystemLogos" src="{{asset('images/Linux.png')}}"></a></span>
+        <span class="os-span"><a href="/login"><img class="operatingSystemLogos" src="{{asset('images/Linux.png')}}"></a></span>
         <span class="os-span"><img class="operatingSystemLogos" src="{{asset('images/Windows.png')}}"><div class="caption">Coming Soon!</div></span>
      @else
         <span class="os-span"><a href="{{asset('/l.zip')}}"><img class="operatingSystemLogos" src="{{asset('images/Linux.png')}}"></a></span>
