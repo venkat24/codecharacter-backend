@@ -1,8 +1,8 @@
 @extends('base')
 
 @section('links')
-  <title>Welcome to Foundation | Banded</title>
-  <link rel="stylesheet" href="{{asset('stylesheets/notifications.css')}}">
+  <title>Notifications - CodeCharacter</title>
+  <link rel="stylesheet" href="stylesheets/notifications.css">
 @endsection
 
 @section('main')
@@ -25,6 +25,6 @@
     <div class="one columns"></div>
       @endforeach
   </div>
-  <script type="text/javascript" src="{{asset('javascripts/notifications.js')}}"></script>
+  <script type="text/javascript" src="javascripts/notifications.js"></script>
 @endsection
 

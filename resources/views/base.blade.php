@@ -5,14 +5,14 @@
 
     <meta name="viewport" content="width=device-width" />
 
-    <link rel="stylesheet" href="{{asset('stylesheets/foundation.min.css')}}">
-    <link rel="stylesheet" href="{{asset('stylesheets/app.css')}}">
-    <link rel="stylesheet" href="{{asset('stylesheets/base.css')}}">
+    <link rel="stylesheet" href="stylesheets/foundation.min.css">
+    <link rel="stylesheet" href="stylesheets/app.css">
+    <link rel="stylesheet" href="stylesheets/base.css">
 
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.1/jquery.min.js"></script>
     <script src="https://unpkg.com/vue/dist/vue.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.6/handlebars.min.js"></script>
-    <script src="{{asset('javascripts/modernizr.foundation.js')}}"></script>
+    <script src="javascripts/modernizr.foundation.js"></script>
 
     <!-- This stuff has to move to the backend -->
     <script id="constants">
@@ -71,16 +71,16 @@
           <p>&copy; Copyright <a href="http://pragyan.org">Pragyan</a> 2017. Made with ♥ by <a href="http://deltaforce.club">Delta Force</a></p>
         </div>
         <div class="six columns">
-          <p style="text-align:right"><a href="https://www.digitalocean.com/"><img style="height:35px" src="{{asset('images/digitalOcean.png')}}"></a></p>
+          <p style="text-align:right"><a target="_blank" href="https://www.digitalocean.com/"><img style="height:35px" src="images/digitalOcean.png"></a></p>
         </div>
       </div>
     </div> 
   </footer>
   
-  <script src="{{asset('javascripts/foundation.min.js')}}"></script>
-  <script src="{{asset('javascripts/base.js')}}"></script>
-  <script src="{{asset('javascripts/login.js')}}"></script>
-  <script src="{{asset('javascripts/app.js')}}"></script>
+  <script src="javascripts/foundation.min.js"></script>
+  <script src="javascripts/base.js"></script>
+  <script src="javascripts/login.js"></script>
+  <script src="javascripts/app.js"></script>
 </body>
 </html>
 

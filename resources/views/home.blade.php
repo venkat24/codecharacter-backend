@@ -1,8 +1,8 @@
 @extends('base')
 
 @section('links')
-  <title>Welcome to Foundation | Banded</title>
-  <link rel="stylesheet" href="{{asset('stylesheets/home.css')}}">
+  <title>Home - CodeCharacter</title>
+  <link rel="stylesheet" href="stylesheets/home.css">
 @endsection
 
 @section('main')
@@ -11,7 +11,7 @@
     
   <div class="row" style="margin-top:10px;">
     <div class="twelve columns">
-      <img src="{{asset('images/splash.jpg')}}" />
+      <img src="images/splash.jpg" />
       <hr />
     </div>
   </div>
@@ -29,7 +29,7 @@
   
   <div class="row">
     <div class="four columns">
-      <img src="{{asset('images/wizard.png')}}" />
+      <img src="images/wizard.png" />
     </div>
     <div class="eight columns">
       <h4>Code Character</h4>
@@ -62,18 +62,18 @@
       <p>The Code Character Simulator is available on all popular platforms. Pick your poison!</p>
      <div style="text-align:center">
      @if (!Session::get('user_email'))
-        <span class="os-span"><a href="/login"><img class="operatingSystemLogos" src="{{asset('images/Linux.png')}}"></a></span>
-        <span class="os-span"><img class="operatingSystemLogos" src="{{asset('images/Windows.png')}}"><div class="caption">Coming Soon!</div></span>
+        <span class="os-span"><a href="/login"><img class="operatingSystemLogos" src="images/Linux.png"></a></span>
+        <span class="os-span"><img class="operatingSystemLogos" src="images/Windows.png"><div class="caption">Coming Soon!</div></span>
      @else
-        <span class="os-span"><a href="{{asset('/l.zip')}}"><img class="operatingSystemLogos" src="{{asset('images/Linux.png')}}"></a></span>
-        <span class="os-span"><img class="operatingSystemLogos" src="{{asset('images/Windows.png')}}"><div class="caption">Coming Soon!</div></span>
+        <span class="os-span"><a href="l.zip"><img class="operatingSystemLogos" src="images/Linux.png"></a></span>
+        <span class="os-span"><img class="operatingSystemLogos" src="images/Windows.png"><div class="caption">Coming Soon!</div></span>
      @endif
      </div>
           
     </div>
     <div class="four columns">
-      <img src="{{asset('images/swordsman.png')}}" />
+      <img src="images/swordsman.png" />
     </div>
   </div>
-  <script src="{{asset('javascripts/home.js')}}"></script>
+  <script src="javascripts/home.js"></script>
 @endsection

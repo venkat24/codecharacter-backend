@@ -2,7 +2,7 @@
 
 @section('links')
   <title>Documentation - CodeCharacter</title>
-  <link rel="stylesheet" href="{{asset('stylesheets/docs.css')}}">
+  <link rel="stylesheet" href="stylesheets/docs.css">
 @endsection
 
 @section('main')
@@ -45,5 +45,5 @@
     </div>
 </div>
 
-  <script src="{{asset('javascripts/docs.js')}}"></script>
+  <script src="javascripts/docs.js"></script>
 @endsection

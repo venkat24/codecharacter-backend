@@ -2,7 +2,7 @@
 
 @section('links')
 	<title>Login - CodeCharacter</title>
-	<link rel="stylesheet" href="{{asset('stylesheets/login.css')}}">
+	<link rel="stylesheet" href="stylesheets/login.css">
 @endsection
 
 @section('main')
@@ -26,5 +26,5 @@
 	<div class="four columns">
   </div>
 </div>
-	<script src="{{asset('javascripts/login.js')}}"></script>
+	<script src="javascripts/login.js"></script>
 @endsection
