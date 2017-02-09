@@ -7,8 +7,7 @@ Vue.component('team-member', {
 		'<button v-if="member.status==\'INVITE\'" class="inviteButton button small" onclick="invite()">Send Invite</button> ' +
 		'<button v-if="member.status==\'SENT\'" class="deleteButton button small" onclick="cancel(this.id)" :id="member.invNumber">Cancel Invite</button> ' +
 		'<button v-if="member.status==\'ACCEPTED\'" class="removeButton button small" onclick="remove(this.id)" :id="member.memNumber">Remove Member</button> ' +
-		'<button v-if="member.status==\'ACCEPTED\'" class="makeLeader button small" onclick="leader(this)">Make Leader</button> ' +
-		'<button v-if="member.status==\'LEADER\'" class="leaveButton button small" onclick="leave()">Leave Team</button></div>'
+		'<button v-if="member.status==\'ACCEPTED\'" class="makeLeader button small" onclick="leader(this)">Make Leader</button> '
 });
 
 var teamData = new Vue({
@@ -44,28 +43,29 @@ var teamData = new Vue({
 						teamData.buttonSeen = true;
 						document.getElementById('create-button').className += ' alert';
 					} else alert(data.message);
-				})
-				.fail(function(jqXHR, textStatus, err) {
+				}).fail(function(jqXHR, textStatus, err) {
 					return console.log(err.toString());
 				});
 			}
 			else {
-				$.ajax({
-					url: SITE_BASE_URL + '/api/delete_team',
-					type: 'POST',
-					data: {
-						teamName: USER_DATA.teamName
-					},
-				})
-				.done(function(data) {
-					// ADD ALERT CHECKS
-					if (data.status_code == 200)
-						location.reload();
-					else alert(data.message);
-				})
-				.fail(function(jqXHR, textStatus, err) {
-					return console.log(err.toString());
-				});
+                if(confirm("Are you sure you want to delete your team? (YOU WILL LOSE ALL SUBMISSIONS!)")){
+                    $.ajax({
+                        url: SITE_BASE_URL + '/api/delete_team',
+                        type: 'POST',
+                        data: {
+                            teamName: USER_DATA.teamName
+                        },
+                    })
+                    .done(function(data) {
+                        // ADD ALERT CHECKS
+                        if (data.status_code == 200)
+                            location.reload();
+                        else alert(data.message);
+                    })
+                    .fail(function(jqXHR, textStatus, err) {
+                        return console.log(err.toString());
+                    });
+                }
 			}
 		},
 		add: function() {
@@ -115,14 +115,15 @@ function leave() {
 		type: 'POST',
 		data: {
 			  teamName: USER_DATA.teamName,
-			  email: USER_DATA.userEmail
+			  userEmail: USER_DATA.userEmail
 		},
 	});
 
 	request.done(function(data) {
 		// ADD ALERT CHECKS
 		if (data.status_code == 200)
-			location.reload();
+			console.log(data);
+			//location.reload();
 		else alert(data.message);
 	});
 	request.fail(function(jqXHR, textStatus, err) {
