@@ -32,7 +32,7 @@
 <li>Move your mouse or use the arrow keys to pan around the map.</li>
 </ul>
 </li>
-<li><code>Ctrl + C</code> opens the console, <code>Ctrl + F</code> makes it full screen. You can print stuff to the console for debugging. Only the last 75 items you printed are available, the rest are deleted as more items are printed.</li>
+<li><code>Ctrl + C</code> opens the console, <code>Ctrl + F</code> makes it full screen and <code>Ctrl + L</code> clears the console. You can print stuff to the console for debugging. Only the last 75 items you printed are available, the rest are deleted as more items are printed.</li>
 <li>The score is available at the bottom right corner of the screen.</li>
 </ol>
 <h2><a id="Making_your_own_AI_23"></a>Making your own AI:</h2>
