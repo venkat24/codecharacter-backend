@@ -41,6 +41,7 @@
 <li><code>cd</code> from the project root to <code>resources/app/src/player1</code>.</li>
 <li>A sample AI is already present, with some helper functions.</li>
 <li>Your header files go in /include, and your cpp files go in /src</li>
+<li>Your main code goes in <code>./src/player1.cpp</code>. Find <code>Player1::Update</code>. This is the function you need to add stuff to. It gets called every tick. There's already some code present to help you get started.</li>
 <li>Once you’re done, run <code>./install.sh</code> from the player1 folder root.</li>
 <li>Tada, you’ve built your very own AI! You can test it out with the renderer by running <code>./codecharacter-renderer</code> from the simulator root.</li>
 </ol>
@@ -50,12 +51,12 @@
 <li><code>cd</code> from the project root to <code>resources</code><br />
 </li>
 <li>Run the CMake installer present there. Ensure that you select the option to add CMake to the path for at least your user.</li>
-<li>Run the CodeBlocks installer also present there. Ensure that you do a full install.</li>
+<li>Run the CodeBlocks installer also present there. Ensure that you do a full install. Install it to <code>C:\CodeBlocks</code>, otherwise it won't work.</li>
 <li>Run install.bat also present there.</li>
 <li><code>cd</code> to <code>src\player1</code></li>
 <li>A sample AI is already present, with some helper functions.</li>
 <li>Your header files go in <code>.\include</code>, and your cpp files go in <code>.\src</code>.</li>
-<li>Your main code goes in <code>.\src\player1.cpp</code>. Find Player1::Update. This is the function you need to add stuff to. It gets called every tick. There's already some code present to help you get started.</li>
+<li>Your main code goes in <code>.\src\player1.cpp</code>. Find <code>Player1::Update</code>. This is the function you need to add stuff to. It gets called every tick. There's already some code present to help you get started.</li>
 <li>Once you’re done, run build.bat from the player1 folder root.</li>
 <li>Tada, you’ve built your very own AI! You can test it out with the renderer by running <code>codecharacter-renderer</code> from the simulator root.</li>
 </ol>
