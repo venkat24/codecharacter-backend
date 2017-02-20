@@ -31,7 +31,7 @@ Route::get('/rules', function () {
 Route::get('/submit', function () {
     if(Session::get('user_email')) {
         if (Session::get('team_name')) {
-            return view('submit-dummy');
+            return view('submit');
         } else {
             return Redirect::to('/teams');
         }
