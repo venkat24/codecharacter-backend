@@ -43,3 +43,10 @@ function getSubmissionStatus() {
 		}
 	});
 }
+
+function update(name) {
+	name = name.split("\\");
+	name = name[name.length-1];
+	console.log(name);
+	document.getElementById("fileName").innerHTML = name;
+}
