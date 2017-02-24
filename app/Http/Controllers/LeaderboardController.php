@@ -8,6 +8,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use Log;
+use App\Team;
 use App\Leaderboard;
 use Sangria\JSONResponse;
 
@@ -24,15 +25,12 @@ class LeaderboardController extends Controller
      */
     public function getLeaderboard(Request $request) {
         try {
-          $leaderboard = Leaderboard::join('teams','teams.id','=','leaderboard.teamId')
-                                      ->orderBy('leaderboard.level','desc')
-                                      ->orderBy('leaderboard.score','desc')
-                                      ->select('leaderboard.score','leaderboard.level','teams.teamName')
-                                      ->take(5)
-                                      ->get();
-
-            //return view('leaderboard',[
-            return view('leaderboard-dummy',[
+          $leaderboard = Team::where('currentLevel','>','0')
+                             ->orderBy('currentLevel','desc')
+                             ->orderBy('score','desc')
+                             ->select('score','currentLevel','teamName')
+                             ->get();
+            return view('leaderboard',[
               'leaderboard' => $leaderboard
             ]);
         } catch (Exception $e) {

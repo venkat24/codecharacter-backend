@@ -15,38 +15,50 @@
     </div>
   </div>
   <div class="row">
-    <p style="text-align:center">Submissions have not yet been opened</p>
-    <div class="twelve columns callout-container primary">
+    <div class="twelve columns callout-container primary table-container">
       <table>
         <tbody>
-    @foreach ($leaderboard as $user)
           <tr>
-            <td>
-              {{$user->teamName}}
-            </td>
-            <td>
-              {{$user->level}}
-            </td>
-            <td>
-              {{$user->score}}
-            </td>
+            <th>
+              Team Name
+            </th>
+            <th>
+              Level
+            </th>
+            <th>
+              Score
+            </th>
           </tr>
+    @foreach ($leaderboard as $user)
+        @if ( $user->score === 0 )
+            <tr>
+                <td>
+                {{$user->teamName}}
+                </td>
+                <td>
+                {{$user->currentLevel}}
+                </td>
+                <td>
+                {{$user->score}}
+                </td>
+            </tr>
+        @else
+            <tr>
+                <td>
+                {{$user->teamName}}
+                </td>
+                <td>
+                {{$user->currentLevel-1}}
+                </td>
+                <td>
+                {{$user->score}}
+                </td>
+            </tr>
+        @endif
     @endforeach
         </tbody>
       </table>
     </div>
-    <!--
-    @foreach ($leaderboard as $user)
-    <div class="twelve columns callout-container primary">
-      <div class="callout">
-        <h5>{{$user->teamName}}</h5>
-        <p>{{$user->level}}</p>
-        <p>{{$user->score}}</p>
-        <a href="#">It's dangerous to go alone, take this.</a>
-      </div>
-    </div>
-    @endforeach
-    -->
   </div>
 @endsection
 

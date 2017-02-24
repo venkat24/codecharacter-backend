@@ -59,6 +59,7 @@ class Notifications extends Controller
                                     ->first();
 
                 $notifications = Notification::where('userId','=',$user->id)
+                                             ->orderBy('id','desc')
                                              ->get();
 
                 return view('notifications',[

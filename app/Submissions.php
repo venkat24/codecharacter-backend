@@ -8,4 +8,5 @@ class Submissions extends Model
 {
     protected $table = "submissions";
     protected $primary_key = "id";
+    public $timestamps = true;
 }

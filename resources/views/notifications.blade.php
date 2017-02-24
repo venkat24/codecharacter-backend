@@ -18,7 +18,7 @@
     <div class="one columns"></div>
     <div class="twelve columns callout-container primary">
       <div class="callout">
-        <h5>{{$notif->title}}</h5>
+        <h5>{!! $notif->title !!}</h5>
         <p>{!! $notif->message !!}</p>
       </div>
     </div>

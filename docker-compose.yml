@@ -14,7 +14,7 @@ services:
   app:
     container_name: codecharacterbackend_app_1
     build: ./docker/app/
-    volumes: 
+    volumes:
       - ./:/var/www/code-character
     depends_on:
       - db

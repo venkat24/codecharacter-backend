@@ -28,18 +28,7 @@ Route::get('/docs', function () {
 Route::get('/rules', function () {
     return view('rules');
 });
-Route::get('/submit', function () {
-    if(Session::get('user_email')) {
-        if (Session::get('team_name')) {
-            return view('submit');
-        } else {
-            return Redirect::to('/teams');
-        }
-    } else {
-        return Redirect::to('/login');
-    }
-});
-
+Route::get('/submit','SimulatorCall@getSubmitPage');
 Route::get('/notifications','Notifications@showAllNotifications');
 Route::get('/leaderboard','LeaderboardController@getLeaderboard');
 // API routes

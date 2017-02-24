@@ -1,0 +1,46 @@
+.table-container {
+    text-align: center;
+}
+
+tbody {
+    background: transparent;
+}
+
+table {
+    margin: 0 auto;
+    border: 2px solid white;
+    width: 100%;
+    background: transparent;
+    border-collapse: collapse;
+}
+
+td {
+    background: transparent;
+    text-align: center !important;
+    border: 1px solid white !important;
+    width: 33%;
+    padding: 20px !important;
+}
+
+th {
+    color: white;
+    font-size: 1.2em;
+    height: 90px;
+    background: #222 !important;
+    border: 1px solid white;
+    padding: 5px;
+    margin: 5px;
+}
+
+tr {
+ background: black !important;
+}
+
+tr:nth-child(even) {
+	background: #02516B !important;
+	/*opacity: 0.5;*/
+}
+
+tr:not(:first-child) td {
+	color: white !important;
+}

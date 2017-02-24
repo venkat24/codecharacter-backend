@@ -22,23 +22,25 @@ docker run -td -P \
 # Addition package installations
 docker network connect codecharacterbackend_default $SIM_CONTAINER_NAME
 docker exec $SIM_CONTAINER_NAME apt-get update -y
-docker exec $SIM_CONTAINER_NAME apt-get install python-pip -y
+docker exec $SIM_CONTAINER_NAME apt-get install python-pip htop-y
 docker exec $SIM_CONTAINER_NAME pip install sqlalchemy pymysql
 
 # Get cmake binaries
 docker exec $SIM_CONTAINER_NAME wget https://cmake.org/files/v3.8/cmake-3.8.0-rc1-Linux-x86_64.tar.gz
 docker exec $SIM_CONTAINER_NAME tar xvf cmake-3.8.0-rc1-Linux-x86_64.tar.gz
-docker exec $SIM_CONTAINER_NAME mv cmake-3.8.0-rc1-Linux-x86_64/bin/cmake /usr/bin/
+docker exec $SIM_CONTAINER_NAME ln -s /var/www/code-character/sim/cmake-3.8.0-rc1-Linux-x86_64/bin/cmake /usr/bin/cmake
 
-# Run the python watcher script
-# docker exec $SIM_CONTAINER_NAME python watch.py
+# Change permissions of the web app
+docker exec codecharacterbackend_app_1 chown www-data:www-data code-character -R
+
+# Change permissions of the database files
+docker exec codecharacterbackend_db_1 chown mysql:mysql /var/lib/mysql -R
 
 # Run Migrations
 docker exec codecharacterbackend_app_1 php code-character/artisan migrate
 
-# Change permissions of the web app
-docker exec codecharacterbackend_app_1 chown www-data:www-data code-character -R
-docker exec codecharacterbackend_db_1 chown mysql:mysql /var/lib//mysql -R
+# Run the python watcher scripts
+docker exec $SIM_CONTAINER_NAME ./queue_start.sh &
 
 # Finish
 echo "Success!"

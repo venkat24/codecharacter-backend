@@ -57,7 +57,7 @@ class Registrations extends Controller
                 $teamInsert = Team::insert([
                     'teamName'             => $teamName,
                     'leaderRegistrationId' => $leaderRegId,
-                    'currentLevel'         => 0,
+                    'currentLevel'         => 1,
                     'score'                => 0,
                   ]);
                 $userInsert = Registration::where('id','=',$leaderRegId)

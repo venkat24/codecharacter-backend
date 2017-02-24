@@ -48,7 +48,7 @@
 
 <h2><a id="Making_your_own_AI_33"></a>Making your own AI: (Windows)</h2>
 <ol style="list-style-type: decimal">
-<li><code>cd</code> from the project root to <code>resources</code><br />
+<li><code>cd</code> from the project root to <code>resources\app</code><br />
 </li>
 <li>Run the CMake installer present there. Ensure that you select the option to add CMake to the path for at least your user.</li>
 <li>Run the CodeBlocks installer also present there. Ensure that you do a full install. Install it to <code>C:\CodeBlocks</code>, otherwise it won't work.</li>

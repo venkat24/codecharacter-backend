@@ -2,7 +2,7 @@ import sqlalchemy
 import os, sys, time, shutil
 import pymysql.cursors
 
-engine = sqlalchemy.create_engine('mysql+pymysql://root:pwd@localhost/code_character')
+engine = sqlalchemy.create_engine('mysql+pymysql://root:pwd@db/code_character')
 
 def queueSubmissions(submissions, currentSubmissions, submissionCount):
     # Queue the new job/jobs
@@ -27,7 +27,6 @@ def checkForNewSubmissionsAndQueueThem():
             currentSubmissions = submissionCount
             startFlag = False
         if currentSubmissions != submissionCount:
-            print('New Submission!')
             queueSubmissions(submissionsList, currentSubmissions, submissionCount)
         print(submissionCount)
         currentSubmissions = submissionCount
