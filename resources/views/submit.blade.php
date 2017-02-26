@@ -49,7 +49,7 @@
         <label>Select Level <br />
         <select name='level' id='level' style="width:50%">
             <option value="{{$level->currentLevel}}">{{$level->currentLevel}}</option>
-            @if ( $level->currentLevel != 1  )
+            @if ( $level->currentLevel != 1  && $level->currentLevel !=env('MAX_LEVEL'))
             <option value="{{$level->currentLevel-1}}">{{$level->currentLevel-1}}</option>
             @endif
         </select>

@@ -4,6 +4,7 @@ import pymysql.cursors
 import hashlib
 import random
 import builder
+import subprocess
 
 engine = sqlalchemy.create_engine('mysql+pymysql://root:pwd@db/code_character')
 max_level = 3
@@ -86,7 +87,14 @@ def runSubmissions():
 
                     except Exception as e:
                         print(e)
-                        score=(0,0)
+                        score=(-999,-999)
+
+                    status=""
+                    if score == (-999,-999):
+                        status="FAILED"
+                        raise Exception('EXECUTION FAILED')
+                    else:
+                        status="COMPLETED"
 
                     print('Simulation complete')
                     # Once the simulation is over, kill the row in the queue
@@ -94,19 +102,6 @@ def runSubmissions():
                     DELETE FROM `queue` WHERE `id` = {0}
                     """
                     engine.execute(deleteFromQueueQuery.format(queueId))
-
-                    # Update the Submission status
-                    updateSubmissionStatusQuery="""
-                    UPDATE `submissions` SET `status` = '{0}' WHERE `id` = {1}
-                    """
-                    status=""
-                    if score:
-                        status="COMPLETED"
-                    else:
-                        status="FAILED"
-                        title="Submission Failed"
-                        message="Execution failed due to unknown circumstances. Please check your uploaded code, and verify that it works with the simulator provided."
-                    engine.execute(updateSubmissionStatusQuery.format(status, queueList[i]['submissions_id']))
 
                     # Get the teamId
                     teamId = 0
@@ -180,12 +175,18 @@ def runSubmissions():
                             UPDATE `teams` SET `score` = {0} WHERE `id` = {1}
                             """
                             engine.execute(updateScoresQuery.format(scoreDifference,teamId))
-                            pass
                         else:
                             pass
                     else:
-                        # Send failed Notification
+                        title="Submission Failed"
+                        message="Your submission failed due to unknown circumstances. Please ensure that you are submitting working code and zipping only the <code>player1</code> directory." 
                         pass
+
+                    # Set submisison status
+                    setSubmissionStatus="""
+                    UPDATE `submissions` SET `status`='{}' WHERE `id`={}
+                    """
+                    engine.execute(setSubmissionStatus.format(status,queueList[i]['submissions_id']))
 
                     # Add notifications for players
                     addNotifications(title,message,teamId);
@@ -204,6 +205,26 @@ def runSubmissions():
                     removeBadJobFromQueueQuery="""
                     DELETE FROM `queue` WHERE `id` = {}
                     """
+                    # Completely remove simulator code
+                    try:
+                        ret = subprocess.check_call('rm -rf /var/www/code-character/sim/code_character_simulator/')
+                        if ret:
+                            raise Exception('Trying to delete simulator files that do not exist')
+                    except Exception as e:
+                        print(e)
+                        pass
+                    title="Submission Failed"
+                    message="Your submission failed due to unknown circumstances. Please ensure that you are submitting working code and zipping only the <code>player1</code> directory." 
+                    # Get the teamId
+                    teamId = 0
+                    fetchTeamIdQuery="""
+                    SELECT `teamId` FROM `submissions` WHERE `id` = {0}
+                    """
+                    corresSubmission = engine.execute(fetchTeamIdQuery.format(queueList[i]['submissions_id']))
+                    for row in corresSubmission:
+                        teamId = row[0]
+
+                    addNotifications(title,message,teamId);
                     engine.execute(removeBadJobFromQueueQuery.format(queueList[i]['id']))
         time.sleep(5)
 

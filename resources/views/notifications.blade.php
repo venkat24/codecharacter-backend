@@ -3,6 +3,7 @@
 @section('links')
   <title>Notifications - CodeCharacter</title>
   <link rel="stylesheet" href="stylesheets/notifications.css">
+  <link rel="stylesheet" href="stylesheets/docs.css">
 @endsection
 
 @section('main')

@@ -77,13 +77,14 @@ class SimulatorCall extends Controller
     public function submitCode(Request $request)
     {
         $validator = Validator::make($request->all(),[
-            'file'     => 'mimes:zip',
+            'file'     => 'required|mimes:zip',
             'level'    => 'required',
         ]);
         if ($validator->fails())
         {
-            $message = $validator->errors()->all();
-            return JSONResponse::response(400,$message);
+            return view('done',[
+                'text' => 'Invalid File'
+            ]);
         }
 
         $file = $request->file('file');
@@ -99,7 +100,9 @@ class SimulatorCall extends Controller
                             ->count();
 
         if($todays_submissions > 10) {
-            return JSONResponse::response(400, 'Too many submissions');
+            return view('done',[
+                'text' => 'Exceeded submission limit. Please try tomorrow'
+            ]);
         };
 
         //Check for Valid Level No
@@ -107,9 +110,18 @@ class SimulatorCall extends Controller
         $currentLevelQuery = Team::where('id','=',$team_id)
                                  ->first();
         $currentLevel = $currentLevelQuery->currentLevel;
+
         // Checks if the contestant is competing for a proper level
+        if($level == env('MAX_LEVEL') && $level != $currentLevel) {
+            return view('done',[
+                'text' => 'Incorrect Level'
+            ]);
+        }
+
         if(!($level == $currentLevel || $level == ($currentLevel-1))){
-            return JSONResponse::response(400, 'Incorrect Level');
+            return view('done',[
+                'text' => 'Incorrect Level'
+            ]);
         }
 
         // Check if the contestant already has a running submission
@@ -118,16 +130,22 @@ class SimulatorCall extends Controller
                              ->orWhere('status','=','WAITING')
                              ->get();
         if($running_submissions->count()) {
-            return JSONResponse::response(400, 'Submissions already waiting or running');
+            return view('done',[
+                'text' => 'Submissions already waiting or running'
+            ]);
         }
         $ext = $file->getClientOriginalExtension();
         if(!$file->isValid()) {
-            return JSONResponse::response(422,'Invalid file');
+            return view('done',[
+                'text' => 'Invalid File'
+            ]);
         }
         $team = Team::where('id','=',$team_id)
                                ->get();
         if($team->isEmpty()) {
-            return JSONResponse::response(400,'Invalid team id');
+            return view('done',[
+                'text' => 'Invalid Team Id'
+            ]);
         } else {
             $submission = Submissions::insert([
                     'teamId' => $team_id,
@@ -136,7 +154,9 @@ class SimulatorCall extends Controller
                     'created_at' => $current_time->toDateTimeString(),
                     'updated_at' => $current_time->toDateTimeString(),
             ]);
-            return JSONResponse::response(200, 'Upload successful');
+            return view('done',[
+                'text' => 'Submission Successful'
+            ]);
         }
     }
 }

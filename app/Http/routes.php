@@ -35,9 +35,11 @@ Route::get('/leaderboard','LeaderboardController@getLeaderboard');
 Route::group(['middleware' => 'setResponseHeaders'], function() {
     Route::post('/api/login','Auth@login');
 });
+Route::group(['middleware' => ['checkSession']], function() {
+    Route::post('/api/submit_code', 'SimulatorCall@submitCode');
+});
 Route::group(['middleware' => ['checkSession','setResponseHeaders']], function() {
     Route::post('/api/logout','Auth@logout');
-    Route::post('/api/submit_code', 'SimulatorCall@submitCode');
     Route::post('/api/leave_team','Registrations@leaveTeam');
     Route::post('/api/change_leader','Registrations@changeLeader');
     Route::post('/api/delete_team','Registrations@deleteTeam');
