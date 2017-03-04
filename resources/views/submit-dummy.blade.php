@@ -14,7 +14,7 @@
   </div>
   <div class="row">
     <div class="twelve columns">
-      <h5 style="text-align:center">Submissions have not yet been opened</h5>
+      <h5 style="text-align:center">Submissions have been closed</h5>
     </div>
   </div>
 @endsection

@@ -30,25 +30,25 @@
             </th>
           </tr>
     @foreach ($leaderboard as $user)
-        @if ( $user->score === 0 && $user->currentLevel === env('MAX_LEVEL'))
+        @if ( $user->currentLevel === 0 )
+            <tr>
+                <td>
+                {{$user->teamName}}
+                </td>
+                <td>
+                1
+                </td>
+                <td>
+                {{$user->score}}
+                </td>
+            </tr>
+        @elseif ( $user->score === 0 && $user->currentLevel === env('MAX_LEVEL'))
             <tr>
                 <td>
                 {{$user->teamName}}
                 </td>
                 <td>
                 {{$user->currentLevel}}
-                </td>
-                <td>
-                {{$user->score}}
-                </td>
-            </tr>
-        @elseif ( $user->score === 0 )
-            <tr>
-                <td>
-                {{$user->teamName}}
-                </td>
-                <td>
-                {{$user->currentLevel-1}}
                 </td>
                 <td>
                 {{$user->score}}
