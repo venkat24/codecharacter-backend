@@ -36,7 +36,7 @@ Route::group(['middleware' => 'setResponseHeaders'], function() {
     Route::post('/api/login','Auth@login');
 });
 Route::group(['middleware' => ['checkSession']], function() {
-    Route::post('/api/submit_code', 'SimulatorCall@submitCode');
+    //Route::post('/api/submit_code', 'SimulatorCall@submitCode');
 });
 Route::group(['middleware' => ['checkSession','setResponseHeaders']], function() {
     Route::post('/api/logout','Auth@logout');

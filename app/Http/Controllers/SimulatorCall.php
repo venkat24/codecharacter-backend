@@ -22,7 +22,7 @@ class SimulatorCall extends Controller
                 $teamName = Session::get('team_name');
                 $level = Team::where('teamName','=',$teamName)
                          ->first();
-                return view('submit',[
+                return view('submit-dummy',[
                     'level' => $level
                 ]);
             } else {
